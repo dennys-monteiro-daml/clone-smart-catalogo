@@ -1,0 +1,6 @@
+{
+    "require": {
+        "spatie/pdf-to-image": "2.1.*",
+        "coffeecode/datalayer": "^1.1"
+    }
+}

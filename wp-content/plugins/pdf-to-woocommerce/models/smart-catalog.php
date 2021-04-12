@@ -1,0 +1,37 @@
+<?php
+
+class Smart_Catalog extends Custom_Post_Type_Base
+{
+
+    private static $instance;
+
+    function __construct()
+    {
+        $this->name = 'Catálogos';
+        $this->singular_name = 'Catálogo';
+        $this->post_type = 'smart_catalog';
+        $this->slug = 'catalogo';
+        $this->icon_id = 'dashicons-analytics';
+        $this->supports = ['title'];
+        $this->metabox = 'add_post_type_metabox';
+        Smart_Catalog::$instance = $this;
+        // $this->menu_position = 8;
+    }
+
+	public function add_post_type_metabox(WP_Post $post)
+	{
+		add_meta_box('study_meta', 'Study Details', function () use ($post) {
+			include_once(plugin_dir_path(dirname(__FILE__)) . 'admin/views/form-upload-catalog.php');
+		});
+    }
+
+    public static function get_instance() {
+        if (!isset(self::$instance)) {
+            self::$instance = new Smart_Catalog();
+        }
+        return self::$instance;
+    }
+
+
+
+}
