@@ -106,7 +106,7 @@ class Pdf_To_Woocommerce_Public
 	{
 		$sc = Smart_Catalog::get_instance();
 		$sc->register_post_type();
-
+		$sc->register_post_status();
 		// register_post_type(
 		// 	'smart_catalog',
 		// 	// CPT Options
@@ -131,5 +131,38 @@ class Pdf_To_Woocommerce_Public
 		add_meta_box('study_meta', 'Study Details', function () {
 			include_once(plugin_dir_path(dirname(__FILE__)) . 'admin/views/form-upload-catalog.php');
 		});
+	}
+
+	public function display_post_states($states)
+	{
+		global $post;
+		$arg = get_query_var('post_status');
+		if ($arg != 'uploaded') {
+			if ($post->post_status == 'uploaded') {
+				return array('Em demarcação');
+			}
+		}
+		return $states;
+	}
+
+	function jc_append_post_status_list()
+	{
+		global $post;
+		$complete = '';
+		$label = '';
+		if ($post->post_type == Smart_Catalog::get_instance()->post_type) {
+			if ($post->post_status == 'uploaded') {
+				$complete = ' selected="selected"';
+				$label = '<span id="post-status-display"> Em demarcação</span>';
+			}
+			echo '
+			 <script>
+			 jQuery(document).ready(function($){
+				  $("select#post_status").append("<option value="uploaded" ' . $complete . '>Em demarcação</option>");
+				  $(".misc-pub-section label").append("' . $label . '");
+			 });
+			 </script>
+			 ';
+		}
 	}
 }

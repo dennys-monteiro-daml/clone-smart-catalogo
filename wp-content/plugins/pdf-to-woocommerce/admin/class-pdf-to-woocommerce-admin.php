@@ -166,6 +166,10 @@ class Pdf_To_Woocommerce_Admin
 				$page_count = $pdf->getNumberOfPages();
 
 				update_post_meta($_POST['post_ID'], Smart_Catalog::META_KEY_NUMBER_OF_PAGES, $page_count);
+				wp_update_post(array(
+					'ID' => $_POST['post_ID'],
+					'post_status' => 'uploaded'
+				));
 
 				for ($i = 0; $i < $page_count; $i++) {
 					$pdf->setPage($i + 1)

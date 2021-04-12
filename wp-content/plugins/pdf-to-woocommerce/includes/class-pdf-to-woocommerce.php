@@ -198,9 +198,11 @@ class Pdf_To_Woocommerce
 		$plugin_public = new Pdf_To_Woocommerce_Public($this->get_plugin_name(), $this->get_version());
 
 		$this->loader->add_action('init', $plugin_public, 'register_post_types');
-		
+
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+		$this->loader->add_filter('display_post_states', $plugin_public, 'display_post_states');
+		$this->loader->add_action('admin_footer-post.php', $plugin_public, 'jc_append_post_status_list');
 	}
 
 	/**
