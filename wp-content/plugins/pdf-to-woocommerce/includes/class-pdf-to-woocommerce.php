@@ -180,6 +180,9 @@ class Pdf_To_Woocommerce
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'admin_menu');
+		$this->loader->add_filter('use_block_editor_for_post_type', $plugin_admin, 'remove_gutemberg', 10, 2);
+		$this->loader->add_action('wp_ajax_add_pdf', $plugin_admin, 'handle_pdf_upload');
+		// $this->loader->add_action('save_post', $plugin_admin, 'save_catalogo');
 	}
 
 	/**
@@ -195,7 +198,7 @@ class Pdf_To_Woocommerce
 		$plugin_public = new Pdf_To_Woocommerce_Public($this->get_plugin_name(), $this->get_version());
 
 		$this->loader->add_action('init', $plugin_public, 'register_post_types');
-		$this->loader->add_filter('use_block_editor_for_post_type', $plugin_public, 'remove_gutemberg', 10, 2);
+		
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 	}

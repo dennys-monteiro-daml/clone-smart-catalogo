@@ -126,22 +126,9 @@ class Pdf_To_Woocommerce_Public
 		// );
 	}
 
-	public function remove_gutemberg($enabled, $post_type)
+	public function add_post_type_metabox()
 	{
-
-		// List of post types to remove
-		$remove_gutenberg_from = ['smart_catalog'];
-
-		if (in_array($post_type, $remove_gutenberg_from)) {
-			return false;
-		}
-
-		return $enabled;
-	}
-
-	public function add_post_type_metabox(WP_Post $post)
-	{
-		add_meta_box('study_meta', 'Study Details', function () use ($post) {
+		add_meta_box('study_meta', 'Study Details', function () {
 			include_once(plugin_dir_path(dirname(__FILE__)) . 'admin/views/form-upload-catalog.php');
 		});
 	}

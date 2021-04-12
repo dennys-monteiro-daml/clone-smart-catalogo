@@ -25,19 +25,25 @@ use Spatie\PdfToImage\Pdf;
 class Pdf_To_Woocommerce_Admin
 {
 
+	public const PDF_CONVERTED_FOLDER = 'converted';
 
-	public const ADMIN_MENU_ITEMS = [
-		[
-			'page_title' => 'Importar Catálogos',
-			'menu_title' => 'Importar Catálogos',
-			'capability' => 'administrator',
-			'slug' => 'page-slug',
-			'callback' => 'page_main',
-			'icon' => 'dashicons-analytics',
-			'position' => 0
-		]
-	];
-
+	public static function get_upload_dir($post_id)
+	{
+		return implode(DIRECTORY_SEPARATOR, array(
+			untrailingslashit(plugin_dir_path(__FILE__)),
+			'uploads',
+			$post_id
+		)) . DIRECTORY_SEPARATOR;
+	}
+	
+	public static function get_upload_url($post_id)
+	{
+		return implode(DIRECTORY_SEPARATOR, array(
+			untrailingslashit(plugin_dir_url(__FILE__)),
+			'uploads',
+			$post_id
+		)) . DIRECTORY_SEPARATOR;
+	}
 	/**
 	 * The ID of this plugin.
 	 *
@@ -70,8 +76,11 @@ class Pdf_To_Woocommerce_Admin
 
 	public function enqueue_scripts()
 	{
-		// wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . '/js/src/index.bundle.js', array('jquery'), $this->version, false);
-		// wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/pdf-to-woocommerce-admin.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name . "-admin", plugin_dir_url(__FILE__) . 'js/admin.js', array('jquery'), $this->version, false);
+		wp_localize_script($this->plugin_name . "-admin", "wp_object", array(
+			"site_url" => get_site_url(),
+			"admin_url" => get_admin_url()
+		));
 	}
 
 	public function admin_menu()
@@ -105,4 +114,118 @@ class Pdf_To_Woocommerce_Admin
 		// echo "</pre>";
 		// echo "<h1>Olá mundo!</h1>";
 	}
+
+	public function remove_gutemberg($enabled, $post_type)
+	{
+
+		// List of post types to remove
+		$remove_gutenberg_from = ['smart_catalog'];
+
+		if (in_array($post_type, $remove_gutenberg_from)) {
+			return false;
+		}
+
+		return $enabled;
+	}
+
+	public function handle_pdf_upload()
+	{
+		try {
+
+			if (!isset($_POST['add_pdf_nonce']) || !wp_verify_nonce($_POST['add_pdf_nonce'], 'add_pdf_nonce')) {
+				echo json_encode(array(
+					'status' => 'error',
+					'message' => 'Não autorizado'
+				), JSON_UNESCAPED_UNICODE);
+				die();
+			}
+
+			if (empty($_FILES) || !isset($_POST['post_ID'])) {
+				echo json_encode(array(
+					'status' => 'error',
+					'message' => 'Dados insuficientes'
+				), JSON_UNESCAPED_UNICODE);
+				die();
+			}
+
+			$uploaddir = Pdf_To_Woocommerce_Admin::get_upload_dir($_POST['post_ID']);
+
+			if (!is_dir($uploaddir)) {
+				mkdir($uploaddir, 0777, true);
+				mkdir($uploaddir . DIRECTORY_SEPARATOR . Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER, 0777, true);
+			}
+
+			$uploadfile = implode(DIRECTORY_SEPARATOR, array(
+				untrailingslashit($uploaddir),
+				basename($_FILES['file']['name'])
+			));
+
+			if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
+
+				$pdf = new Pdf($uploadfile);
+				$page_count = $pdf->getNumberOfPages();
+
+				update_post_meta($_POST['post_ID'], Smart_Catalog::META_KEY_NUMBER_OF_PAGES, $page_count);
+
+				for ($i = 0; $i < $page_count; $i++) {
+					$pdf->setPage($i + 1)
+						->saveImage(implode(DIRECTORY_SEPARATOR, array(
+							untrailingslashit($uploaddir),
+							Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER,
+							"$i.png"
+						)));
+				}
+
+
+				echo json_encode(array(
+					'status' => 'ok',
+					'message' => 'Arquivo recebido',
+					'files' => $_FILES
+				), JSON_UNESCAPED_UNICODE);
+				die();
+			} else {
+
+				echo json_encode(array(
+					'status' => 'error',
+					'message' => 'Erro ao salvar o arquivo'
+				), JSON_UNESCAPED_UNICODE);
+				die();
+			}
+		} catch (\Exception $error) {
+
+			echo json_encode(array(
+				'status' => 'error',
+				'message' => 'Erro ao salvar o arquivo',
+				'error' => $error
+			), JSON_UNESCAPED_UNICODE);
+			die();
+		}
+	}
+
+	// public function save_catalogo($post_id)
+	// {
+	// 	$post = get_post($post_id);
+	// 	$is_revision = wp_is_post_revision($post_id);
+	// 	$field_name = 'file';
+
+	// 	// Do not save meta for a revision or on autosave
+	// 	if ($post->post_type != Smart_Catalog::get_instance()->post_type || $is_revision)
+	// 		return;
+
+	// 	// Secure with nonce field check
+	// 	if (!check_admin_referer('add_pdf_nonce', 'add_pdf_nonce'))
+	// 		return;
+
+	// 	if (!empty($_FILES)) {
+
+	// 		$uploaddir = plugin_dir_path(__FILE__) . 'uploads/';
+	// 		$uploadfile = $uploaddir . basename($_FILES['file']['name']);
+
+	// 		if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
+	// 			echo "Arquivo válido e enviado com sucesso.\n";
+	// 		} else {
+	// 			trigger_error("Erro ao enviar o arquivo");
+	// 		}
+	// 	}
+	// }
 }
