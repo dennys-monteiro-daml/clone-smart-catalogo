@@ -35,7 +35,7 @@ class Pdf_To_Woocommerce_Admin
 			$post_id
 		)) . DIRECTORY_SEPARATOR;
 	}
-	
+
 	public static function get_upload_url($post_id)
 	{
 		return implode(DIRECTORY_SEPARATOR, array(
@@ -206,30 +206,50 @@ class Pdf_To_Woocommerce_Admin
 		}
 	}
 
-	// public function save_catalogo($post_id)
-	// {
-	// 	$post = get_post($post_id);
-	// 	$is_revision = wp_is_post_revision($post_id);
-	// 	$field_name = 'file';
+	public function save_catalogo($post_id)
+	{
+		$post = get_post($post_id);
+		$is_revision = wp_is_post_revision($post_id);
+		// $field_name = 'file';
+		// Do not save meta for a revision or on autosave
+		if ($post->post_type != Smart_Catalog::get_instance()->post_type || $is_revision)
+			return;
 
-	// 	// Do not save meta for a revision or on autosave
-	// 	if ($post->post_type != Smart_Catalog::get_instance()->post_type || $is_revision)
-	// 		return;
+		// Do not change if post is published OR uploaded
+		if ($post->post_status === 'published' || $post->post_status === 'uploaded')
+			return;
 
-	// 	// Secure with nonce field check
-	// 	if (!check_admin_referer('add_pdf_nonce', 'add_pdf_nonce'))
-	// 		return;
+		$number_of_pages = get_post_meta($post_id, Smart_Catalog::META_KEY_NUMBER_OF_PAGES, true);
 
-	// 	if (!empty($_FILES)) {
+		if ($number_of_pages != '' && intval($number_of_pages) > 0) {
 
-	// 		$uploaddir = plugin_dir_path(__FILE__) . 'uploads/';
-	// 		$uploadfile = $uploaddir . basename($_FILES['file']['name']);
+			wp_update_post(array(
+				'ID' => $post_id,
+				'post_status' => 'uploaded'
+			));
+		}
 
-	// 		if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
-	// 			echo "Arquivo válido e enviado com sucesso.\n";
-	// 		} else {
-	// 			trigger_error("Erro ao enviar o arquivo");
-	// 		}
-	// 	}
-	// }
+
+		// $post = get_post($post_id);
+		// $is_revision = wp_is_post_revision($post_id);
+		// $field_name = 'file';
+
+
+
+		// // Secure with nonce field check
+		// if (!check_admin_referer('add_pdf_nonce', 'add_pdf_nonce'))
+		// 	return;
+
+		// if (!empty($_FILES)) {
+
+		// 	$uploaddir = plugin_dir_path(__FILE__) . 'uploads/';
+		// 	$uploadfile = $uploaddir . basename($_FILES['file']['name']);
+
+		// 	if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
+		// 		echo "Arquivo válido e enviado com sucesso.\n";
+		// 	} else {
+		// 		trigger_error("Erro ao enviar o arquivo");
+		// 	}
+		// }
+	}
 }

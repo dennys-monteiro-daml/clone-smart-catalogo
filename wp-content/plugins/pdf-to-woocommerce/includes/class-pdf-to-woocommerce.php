@@ -182,7 +182,7 @@ class Pdf_To_Woocommerce
 		$this->loader->add_action('admin_menu', $plugin_admin, 'admin_menu');
 		$this->loader->add_filter('use_block_editor_for_post_type', $plugin_admin, 'remove_gutemberg', 10, 2);
 		$this->loader->add_action('wp_ajax_add_pdf', $plugin_admin, 'handle_pdf_upload');
-		// $this->loader->add_action('save_post', $plugin_admin, 'save_catalogo');
+		$this->loader->add_action('save_post_' . Smart_Catalog::get_instance()->post_type, $plugin_admin, 'save_catalogo');
 	}
 
 	/**
