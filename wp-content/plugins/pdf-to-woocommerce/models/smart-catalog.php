@@ -18,9 +18,9 @@ class Smart_Catalog extends Custom_Post_Type_Base
         // $this->menu_position = 8;
     }
 
-	public function add_post_type_metabox(WP_Post $post)
+	public function add_post_type_metabox()
 	{
-		add_meta_box('study_meta', 'Study Details', function () use ($post) {
+		add_meta_box('upload_catalog', 'Upload de catálogo', function () {
 			include_once(plugin_dir_path(dirname(__FILE__)) . 'admin/views/form-upload-catalog.php');
 		});
     }

@@ -106,7 +106,6 @@ class Pdf_To_Woocommerce
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'composer/vendor/autoload.php';
 
-
 		/**
 		 * Utils functions 
 		 */
@@ -145,9 +144,6 @@ class Pdf_To_Woocommerce
 		 * side of the site.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-pdf-to-woocommerce-public.php';
-
-
-
 
 		$this->loader = new Pdf_To_Woocommerce_Loader();
 	}
