@@ -77,7 +77,7 @@
 
         $('#create-product').click(function () {
             $('#create-product').hide();
-            $('#page-selector').attr('disabled', 'false');
+            $('#page-selector').attr('disabled', 'true');
             $('#cancel-product').show();
             $('#full-page').show();
             $('#new-product-form').show();
@@ -96,7 +96,7 @@
             $('#cancel-product').hide();
             $('#full-page').hide();
             $('#new-product-form').hide();
-            $('#page-selector').attr('disabled', 'false');
+            $('#page-selector').removeAttr('disabled');
             $('#catalog-page').cropper('destroy');
 
         });

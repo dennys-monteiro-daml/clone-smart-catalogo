@@ -23,3 +23,8 @@
     margin-top: 30px;
     margin-bottom: 20px;
 }
+
+.form-table input,
+.form-table textarea {
+    min-width: 80%;
+}

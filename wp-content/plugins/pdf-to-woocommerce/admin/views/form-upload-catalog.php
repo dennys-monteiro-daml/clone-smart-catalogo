@@ -29,19 +29,54 @@ if ($pages !== '' && intval($pages) > 0) {
     </div>
     <div id="new-product-form">
         <div class="img-preview"></div>
+
         <table class="form-table">
             <tr>
-                <th> <label for="file">CropperJs</label></th>
+                <th> <label for="category">Categoria</label></th>
                 <td>
-                    <textarea name="cropper-js" id="cropper-js" value=""></textarea>
+                    <input name="category" id="category" value="" type="hidden" />
+                    <?php
+                    echo get_woocommerce_categories_selector();
+                    ?>
                 </td>
             </tr>
             <tr>
-                <th> <label for="file">Nome do produto</label></th>
+                <th> <label for="product-name">Nome do produto</label></th>
                 <td>
                     <input name="product-name" id="product-name" value="" />
                 </td>
             </tr>
+            <tr>
+                <th> <label for="variation">Variação</label></th>
+                <td>
+                    <input name="variation" id="variation" value="" />
+                </td>
+            </tr>
+            <tr>
+                <th> <label for="factory">Fabricante</label></th>
+                <td>
+                    <input name="factory" id="factory" value="" />
+                </td>
+            </tr>
+            <tr>
+                <th> <label for="dimensions">Dimensões</label></th>
+                <td>
+                    <input name="dimensions" id="dimensions" value="" />
+                </td>
+            </tr>
+            <tr>
+                <th> <label for="finishing">Acabamento</label></th>
+                <td>
+                    <input name="finishing" id="finishing" value="" />
+                </td>
+            </tr>
+            <tr>
+                <th> <label for="notes">Observações</label></th>
+                <td>
+                    <textarea name="notes" id="notes" value=""></textarea>
+                </td>
+            </tr>
+
 
             <tr>
                 <th></th>

@@ -1,6 +1,7 @@
 <?php
 
-function xcompile_post_type_labels($singular = 'Post', $plural = 'Posts') {
+function xcompile_post_type_labels($singular = 'Post', $plural = 'Posts')
+{
 
     return [
         'name' => $plural,
@@ -19,7 +20,29 @@ function xcompile_post_type_labels($singular = 'Post', $plural = 'Posts') {
         'insert_into_item' => "Inserir no $singular",
         'uploaded_to_this_item' => "Upload ao $singular realizado",
     ];
-    
 }
 
+function get_woocommerce_categories_selector()
+{
+    $orderby = 'name';
+    $order = 'asc';
+    $hide_empty = false;
+    $cat_args = array(
+        'orderby'    => $orderby,
+        'order'      => $order,
+        'hide_empty' => $hide_empty,
+    );
 
+    $product_categories = get_terms('product_cat', $cat_args);
+
+    if (!empty($product_categories)) {
+        // print_r($product_categories);
+        echo '<select>';
+        foreach ($product_categories as $category) {
+            echo '<option value="' . $category->term_id . '">';
+            echo $category->name;
+            echo '</option>';
+        }
+        echo '</select>';
+    }
+}
