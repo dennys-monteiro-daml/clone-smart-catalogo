@@ -28,11 +28,16 @@ if ($pages !== '' && intval($pages) > 0) {
         <tr>
             <th></th>
             <td>
-                <button id="upload-submit">Fazer o Upload</button>
+                <div class="button" id="upload-submit">Fazer o Upload</div>
+                <!-- <a href="#upload-progress" rel="modal:open">Open Modal</a> -->
             </td>
         </tr>
 
     </table>
-
+    <div id="upload-progress" class="modal">
+        <h1 id="upload-message"></h1>
+        <progress id="upload-bar" value="0" max="100"></progress>
+        
+    </div>
 <?php
 }

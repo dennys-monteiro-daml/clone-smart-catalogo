@@ -71,15 +71,18 @@ class Pdf_To_Woocommerce_Admin
 
 	public function enqueue_styles()
 	{
+		wp_enqueue_style($this->plugin_name . 'jquery-modal', "https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css", array(), $this->version, 'all');
 		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pdf-to-woocommerce-admin.css', array(), $this->version, 'all');
 	}
 
 	public function enqueue_scripts()
 	{
+		wp_enqueue_script($this->plugin_name . 'jquery-modal', "https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js", array('jquery'), $this->version, false);
 		wp_enqueue_script($this->plugin_name . "-admin", plugin_dir_url(__FILE__) . 'js/admin.js', array('jquery'), $this->version, false);
 		wp_localize_script($this->plugin_name . "-admin", "wp_object", array(
 			"site_url" => get_site_url(),
-			"admin_url" => get_admin_url()
+			"admin_url" => get_admin_url(),
+			"convert_pdf_nonce" => wp_create_nonce('convert_pdf_nonce')
 		));
 	}
 
@@ -162,29 +165,33 @@ class Pdf_To_Woocommerce_Admin
 
 			if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
 
+				// $pdf = new Pdf($uploadfile);
+				// $page_count = $pdf->getNumberOfPages();
+
+				// update_post_meta($_POST['post_ID'], Smart_Catalog::META_KEY_NUMBER_OF_PAGES, $page_count);
+				// wp_update_post(array(
+				// 	'ID' => $_POST['post_ID'],
+				// 	'post_status' => 'uploaded'
+				// ));
+
+				// for ($i = 0; $i < $page_count; $i++) {
+				// 	$pdf->setPage($i + 1)
+				// 		->saveImage(implode(DIRECTORY_SEPARATOR, array(
+				// 			untrailingslashit($uploaddir),
+				// 			Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER,
+				// 			"$i.png"
+				// 		)));
+				// }
 				$pdf = new Pdf($uploadfile);
 				$page_count = $pdf->getNumberOfPages();
 
-				update_post_meta($_POST['post_ID'], Smart_Catalog::META_KEY_NUMBER_OF_PAGES, $page_count);
-				wp_update_post(array(
-					'ID' => $_POST['post_ID'],
-					'post_status' => 'uploaded'
-				));
-
-				for ($i = 0; $i < $page_count; $i++) {
-					$pdf->setPage($i + 1)
-						->saveImage(implode(DIRECTORY_SEPARATOR, array(
-							untrailingslashit($uploaddir),
-							Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER,
-							"$i.png"
-						)));
-				}
 
 
 				echo json_encode(array(
 					'status' => 'ok',
 					'message' => 'Arquivo recebido',
-					'files' => $_FILES
+					'pdf_location' => $uploadfile,
+					'pages' => $page_count,
 				), JSON_UNESCAPED_UNICODE);
 				die();
 			} else {
@@ -205,6 +212,75 @@ class Pdf_To_Woocommerce_Admin
 			die();
 		}
 	}
+
+	public function convert_pdf_page()
+	{
+		try {
+
+			if (!isset($_POST['convert_pdf_nonce']) || !wp_verify_nonce($_POST['convert_pdf_nonce'], 'convert_pdf_nonce')) {
+				echo json_encode(array(
+					'status' => 'error',
+					'message' => 'Não autorizado'
+				), JSON_UNESCAPED_UNICODE);
+				die();
+			}
+
+			if (!isset($_POST['page']) || !isset($_POST['post_ID']) || !isset($_POST['pdf_location'])) {
+				echo json_encode(array(
+					'status' => 'error',
+					'message' => 'Dados insuficientes'
+				), JSON_UNESCAPED_UNICODE);
+				die();
+			}
+			$uploadfile = $_POST['pdf_location'];
+			$i = $_POST['page'];
+
+			$pdf = new Pdf($uploadfile);
+			$page_count = $pdf->getNumberOfPages();
+
+			if ($i >= $page_count || $i < 0) {
+				echo json_encode(array(
+					'status' => 'error',
+					'message' => 'Página solicitada não existe'
+				), JSON_UNESCAPED_UNICODE);
+				die();
+			}
+
+			$uploaddir = Pdf_To_Woocommerce_Admin::get_upload_dir($_POST['post_ID']);
+
+			// for ($i = 0; $i < $page_count; $i++) {
+			$pdf->setPage($i + 1)
+				->saveImage(implode(DIRECTORY_SEPARATOR, array(
+					untrailingslashit($uploaddir),
+					Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER,
+					"$i.png"
+				)));
+			// }
+			if ($page_count == $i + 1) {
+				update_post_meta($_POST['post_ID'], Smart_Catalog::META_KEY_NUMBER_OF_PAGES, $page_count);
+				wp_update_post(array(
+					'ID' => $_POST['post_ID'],
+					'post_status' => 'uploaded'
+				));
+			}
+
+			echo json_encode(array(
+				'status' => 'ok',
+				'message' => 'Arquivo recebido',
+				
+			), JSON_UNESCAPED_UNICODE);
+			die();
+		} catch (\Exception $error) {
+
+			echo json_encode(array(
+				'status' => 'error',
+				'message' => 'Erro ao salvar o arquivo',
+				'error' => $error
+			), JSON_UNESCAPED_UNICODE);
+			die();
+		}
+	}
+
 
 	public function save_catalogo($post_id)
 	{

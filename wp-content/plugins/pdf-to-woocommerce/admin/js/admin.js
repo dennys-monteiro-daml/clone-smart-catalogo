@@ -20,18 +20,59 @@
             //     action: 'add_pdf',
             // };
             // console.log(data);
-            $.ajax({
+            $('#upload-progress').modal();
+            $('#upload-message').text("Realizando upload - Não feche esta janela");
+            // $('#upload-message').text("Conversão em andamento - Não feche esta janela");
+            postRemote({
                 type: 'POST',
                 url: `${wp_object.admin_url}admin-ajax.php`,
                 data: formData,
                 cache: false,
                 contentType: false,
                 processData: false
-            }).success(function (data) {
+            }).then(async function (data) {
+                if (typeof data === 'string') {
+                    data = JSON.parse(data);
+                }
                 console.log('success!', data);
+                if (data.status === 'ok') {
+                    $('#upload-message').text("Conversão em andamento - Não feche esta janela");
+                    for (var i = 0; i < data.pages; i++) {
+                        var formConvert = new FormData();
+                        formConvert.append('convert_pdf_nonce', wp_object.convert_pdf_nonce);
+                        formConvert.append('post_ID', $('#post_ID').val());
+                        formConvert.append('action', 'convert_pdf');
+                        formConvert.append('page', i);
+                        formConvert.append('pdf_location', data.pdf_location);
+
+                        const response = await postRemote({
+                            type: 'POST',
+                            url: `${wp_object.admin_url}admin-ajax.php`,
+                            data: formConvert,
+                            cache: false,
+                            contentType: false,
+                            processData: false
+                        });
+
+                        console.log(`converted page ${i}`, response);
+
+                        $('#upload-bar').attr('value', 100 * i / data.pages);
+
+                    }
+                }
             })
         });
     });
 
+
+    function postRemote(options) {
+        return new Promise((resolve, reject) => {
+            try {
+                $.ajax(options).success(resolve);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
 
 })(jQuery);
