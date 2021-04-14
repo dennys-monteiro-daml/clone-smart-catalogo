@@ -3,6 +3,13 @@
 
     $(document).ready(function () {
         console.log('window ready!', wp_object);
+        $('.img-preview').css('width', '300px');
+        $('.img-preview').css('height', '300px');
+
+        $('#cancel-product').hide();
+        $('#full-page').hide();
+        $('#new-product-form').hide();
+
         $('#upload-submit').on('click', function () {
 
             var formData = new FormData();
@@ -66,6 +73,44 @@
         $('#page-selector').change(function () {
             console.log($(this).val());
             $('#catalog-page').attr('src', `${wp_object.plugin_admin_url}uploads/${$('#post_ID').val()}/${wp_object.converted_folder}/${$(this).val()}.png`);
+        });
+
+        $('#create-product').click(function () {
+            $('#create-product').hide();
+            $('#page-selector').attr('disabled', 'false');
+            $('#cancel-product').show();
+            $('#full-page').show();
+            $('#new-product-form').show();
+            $('#catalog-page').cropper({
+                preview: '.img-preview',
+                zoomOnWheel: false,
+                crop: function (event) {
+                    $('#cropper-js').val(JSON.stringify(event.detail));
+
+                }
+            });
+        });
+
+        $('#cancel-product').click(function () {
+            $('#create-product').show();
+            $('#cancel-product').hide();
+            $('#full-page').hide();
+            $('#new-product-form').hide();
+            $('#page-selector').attr('disabled', 'false');
+            $('#catalog-page').cropper('destroy');
+
+        });
+
+        $('#full-page').click(function () {
+
+            const { naturalWidth, naturalHeight } = $('#catalog-page').cropper('getImageData');
+            $('#catalog-page').cropper('setData', {
+                x: 0,
+                y: 0,
+                width: naturalWidth,
+                height: naturalHeight
+            });
+
         });
 
     });

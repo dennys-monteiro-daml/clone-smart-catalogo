@@ -3,8 +3,23 @@
  * included in this file.
  */
 
- .img-fluid {
-     width: 100%;
-     height: auto;
- }
- 
+.img-fluid {
+    width: 100%;
+    height: auto;
+}
+
+.img-container {
+    /* Never limit the container height here */
+    max-width: 100%;
+}
+
+.wp-core-ui .button.cancel {
+    color: #c27030;
+    border-color: #c27030;
+}
+
+.img-preview {
+    overflow: hidden;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}

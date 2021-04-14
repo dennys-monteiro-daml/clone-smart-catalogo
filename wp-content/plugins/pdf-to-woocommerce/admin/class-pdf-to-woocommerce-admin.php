@@ -73,13 +73,16 @@ class Pdf_To_Woocommerce_Admin
 	{
 		wp_enqueue_style($this->plugin_name . 'jquery-modal', "https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css", array(), $this->version, 'all');
 		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pdf-to-woocommerce-admin.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name . 'jquery-cropper', plugin_dir_url(__FILE__) . 'js/lib/node_modules/cropperjs/dist/cropper.css', array(), $this->version, 'all');
 	}
 
 	public function enqueue_scripts()
 	{
 		wp_enqueue_script($this->plugin_name . 'jquery-modal', "https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js", array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name . "-admin", plugin_dir_url(__FILE__) . 'js/admin.js', array('jquery'), $this->version, false);
-		wp_localize_script($this->plugin_name . "-admin", "wp_object", array(
+		wp_enqueue_script($this->plugin_name . "cropperjs", plugin_dir_url(__FILE__) . 'js/lib/node_modules/cropperjs/dist/cropper.js', array(), $this->version, false);
+		wp_enqueue_script($this->plugin_name . "jquery-cropper", plugin_dir_url(__FILE__) . 'js/lib/node_modules/jquery-cropper/dist/jquery-cropper.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/admin.js', array('jquery'), $this->version, false);
+		wp_localize_script($this->plugin_name, "wp_object", array(
 			"site_url" => get_site_url(),
 			"admin_url" => get_admin_url(),
 			"convert_pdf_nonce" => wp_create_nonce('convert_pdf_nonce'),
@@ -269,7 +272,7 @@ class Pdf_To_Woocommerce_Admin
 			echo json_encode(array(
 				'status' => 'ok',
 				'message' => 'Arquivo recebido',
-				
+
 			), JSON_UNESCAPED_UNICODE);
 			die();
 		} catch (\Exception $error) {
@@ -306,7 +309,6 @@ class Pdf_To_Woocommerce_Admin
 				'post_status' => 'uploaded'
 			));
 		}
-
 
 		// $post = get_post($post_id);
 		// $is_revision = wp_is_post_revision($post_id);

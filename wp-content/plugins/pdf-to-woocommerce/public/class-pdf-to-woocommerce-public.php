@@ -130,14 +130,14 @@ class Pdf_To_Woocommerce_Public
 		$label = '';
 		if ($post->post_type == Smart_Catalog::get_instance()->post_type) {
 			if ($post->post_status == 'uploaded') {
-				$complete = ' selected="selected"';
-				$label = '<span id="post-status-display"> Em demarcação</span>';
+				$complete = ' selected=\"selected\"';
+				$label = 'Em demarcação';
 			}
 			echo '
 			 <script>
 			 jQuery(document).ready(function($){
-				  $("select#post_status").append("<option value="uploaded" ' . $complete . '>Em demarcação</option>");
-				  $(".misc-pub-section label").append("' . $label . '");
+				  $("select#post_status").append("<option value=\"uploaded\" ' . $complete . '>Em demarcação</option>");
+				  $("#post-status-display").text("' . $label . '");
 			 });
 			 </script>
 			 ';
