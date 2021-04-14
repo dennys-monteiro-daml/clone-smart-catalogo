@@ -34,9 +34,9 @@ if ($pages !== '' && intval($pages) > 0) {
             <tr>
                 <th> <label for="category">Categoria</label></th>
                 <td>
-                    <input name="category" id="category" value="" type="hidden" />
+                    <input name="js-cropper" id="js-cropper" value="" type="hidden" />
                     <?php
-                    echo get_woocommerce_categories_selector();
+                    echo get_woocommerce_categories_selector('category');
                     ?>
                 </td>
             </tr>
@@ -50,12 +50,6 @@ if ($pages !== '' && intval($pages) > 0) {
                 <th> <label for="variation">Variação</label></th>
                 <td>
                     <input name="variation" id="variation" value="" />
-                </td>
-            </tr>
-            <tr>
-                <th> <label for="factory">Fabricante</label></th>
-                <td>
-                    <input name="factory" id="factory" value="" />
                 </td>
             </tr>
             <tr>

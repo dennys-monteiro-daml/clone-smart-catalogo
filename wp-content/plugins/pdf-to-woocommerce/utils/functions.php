@@ -22,7 +22,7 @@ function xcompile_post_type_labels($singular = 'Post', $plural = 'Posts')
     ];
 }
 
-function get_woocommerce_categories_selector()
+function get_woocommerce_categories_selector(string $id, string $class = '')
 {
     $orderby = 'name';
     $order = 'asc';
@@ -37,7 +37,7 @@ function get_woocommerce_categories_selector()
 
     if (!empty($product_categories)) {
         // print_r($product_categories);
-        echo '<select>';
+        echo '<select id="' . $id . '" name="' . $id . '" class="' . $class . '">';
         foreach ($product_categories as $category) {
             echo '<option value="' . $category->term_id . '">';
             echo $category->name;

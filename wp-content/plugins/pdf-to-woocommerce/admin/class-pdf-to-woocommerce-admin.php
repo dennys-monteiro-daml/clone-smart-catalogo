@@ -296,14 +296,25 @@ class Pdf_To_Woocommerce_Admin
 		if ($post->post_type != Smart_Catalog::get_instance()->post_type || $is_revision)
 			return;
 
-		// Do not change if post is published OR uploaded
-		if ($post->post_status === 'published' || $post->post_status === 'uploaded')
-			return;
 
 		$number_of_pages = get_post_meta($post_id, Smart_Catalog::META_KEY_NUMBER_OF_PAGES, true);
 
-		if ($number_of_pages != '' && intval($number_of_pages) > 0) {
+		$fields = array('fabricante');
 
+		foreach ($fields as $field_name) {
+			$field_value = trim($_POST[$field_name]);
+			if (!empty($field_value)) {
+				update_post_meta($post_id, $field_name, $field_value);
+			} else {
+				delete_post_meta($post_id, $field_name);
+			}
+		}
+
+		// Do not change status if post is published OR uploaded
+		if ($post->post_status === 'published' || $post->post_status === 'uploaded' || $post->post_status === 'trash')
+			return;
+
+		if ($number_of_pages != '' && intval($number_of_pages) > 0) {
 			wp_update_post(array(
 				'ID' => $post_id,
 				'post_status' => 'uploaded'

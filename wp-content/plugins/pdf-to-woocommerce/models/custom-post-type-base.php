@@ -12,7 +12,7 @@ class Custom_Post_Type_Base
     public $icon_id;
     public $menu_position = 10;
     public $supports = ['title', 'thumbnail', 'custom-fields'];
-    public $metabox;
+    public $metabox = '';
 
     /**
      * Função para gerar o register_post_type no WP de acordo com o Custom Post Type
@@ -37,9 +37,11 @@ class Custom_Post_Type_Base
             'has_archive'     => true,
             'publicly_queryable'  => false,
             'supports'        => $this->supports,
-            'register_meta_box_cb' => array($this, $this->metabox),
             //'supports' => array('title','editor','thumbnail','comments', 'excerpt', 'custom-fields', 'revisions', 'trackbacks')
         );
+        if ($this->metabox !== '') {
+            $args['register_meta_box_cb'] = array($this, $this->metabox);
+        }
         register_post_type($this->post_type, $args);
     }
 
@@ -93,10 +95,9 @@ class Custom_Post_Type_Base
 
             if ($with_meta) {
                 Post_Meta_Data::attach_meta($post_array);
-            } 
-            
+            }
+
             return $post_array;
-            
         }
 
         if (!is_null($post_array) && $with_meta) {

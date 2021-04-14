@@ -85,6 +85,9 @@ class Pdf_To_Woocommerce_Public
 		$sc = Smart_Catalog::get_instance();
 		$sc->register_post_type();
 		$sc->register_post_status();
+
+		$fabricantes = Fabricante::get_instance();
+		$fabricantes->register_post_type();
 		// register_post_type(
 		// 	'smart_catalog',
 		// 	// CPT Options
