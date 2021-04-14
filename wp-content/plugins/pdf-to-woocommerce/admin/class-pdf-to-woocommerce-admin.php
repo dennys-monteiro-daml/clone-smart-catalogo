@@ -82,7 +82,9 @@ class Pdf_To_Woocommerce_Admin
 		wp_localize_script($this->plugin_name . "-admin", "wp_object", array(
 			"site_url" => get_site_url(),
 			"admin_url" => get_admin_url(),
-			"convert_pdf_nonce" => wp_create_nonce('convert_pdf_nonce')
+			"convert_pdf_nonce" => wp_create_nonce('convert_pdf_nonce'),
+			"plugin_admin_url" => plugin_dir_url(__FILE__),
+			"converted_folder" => Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER
 		));
 	}
 

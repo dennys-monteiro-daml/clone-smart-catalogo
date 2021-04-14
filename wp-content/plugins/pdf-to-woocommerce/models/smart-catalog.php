@@ -22,7 +22,7 @@ class Smart_Catalog extends Custom_Post_Type_Base
 
     public function add_post_type_metabox()
     {
-        add_meta_box('upload_catalog', 'Upload de catálogo', function () {
+        add_meta_box('upload_catalog', 'Catálogo', function () {
             include_once(plugin_dir_path(dirname(__FILE__)) . 'admin/views/form-upload-catalog.php');
         });
     }

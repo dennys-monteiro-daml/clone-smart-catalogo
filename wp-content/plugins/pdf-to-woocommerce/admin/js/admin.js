@@ -60,8 +60,14 @@
 
                     }
                 }
-            })
+            });
         });
+
+        $('#page-selector').change(function () {
+            console.log($(this).val());
+            $('#catalog-page').attr('src', `${wp_object.plugin_admin_url}uploads/${$('#post_ID').val()}/${wp_object.converted_folder}/${$(this).val()}.png`);
+        });
+
     });
 
 
