@@ -34,7 +34,7 @@ if ($pages !== '' && intval($pages) > 0) {
             <tr>
                 <th> <label for="category">Categoria</label></th>
                 <td>
-                    <input name="js-cropper" id="js-cropper" value="" type="hidden" />
+                    <input name="cropper-js" id="cropper-js" value="" type="hidden" />
                     <?php
                     echo get_woocommerce_categories_selector('category');
                     ?>

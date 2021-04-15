@@ -286,16 +286,41 @@ class Pdf_To_Woocommerce_Admin
 		}
 	}
 
+	public function create_product()
+	{
+		try {
+
+			$product = new WC_Product();
+
+			$product->set_name('Produto teste');
+			$product->save();
+
+
+			echo json_encode(array(
+				'status' => 'ok',
+				'message' => 'Produto criado',
+				'id' => $product->get_id()
+			), JSON_UNESCAPED_UNICODE);
+			die();
+		} catch (\Exception $error) {
+
+			echo json_encode(array(
+				'status' => 'error',
+				'message' => 'Erro ao criar o produto',
+				'error' => $error
+			), JSON_UNESCAPED_UNICODE);
+			die();
+		}
+	}
+
 
 	public function save_catalogo($post_id)
 	{
 		$post = get_post($post_id);
 		$is_revision = wp_is_post_revision($post_id);
-		// $field_name = 'file';
-		// Do not save meta for a revision or on autosave
+
 		if ($post->post_type != Smart_Catalog::get_instance()->post_type || $is_revision)
 			return;
-
 
 		$number_of_pages = get_post_meta($post_id, Smart_Catalog::META_KEY_NUMBER_OF_PAGES, true);
 
@@ -320,27 +345,5 @@ class Pdf_To_Woocommerce_Admin
 				'post_status' => 'uploaded'
 			));
 		}
-
-		// $post = get_post($post_id);
-		// $is_revision = wp_is_post_revision($post_id);
-		// $field_name = 'file';
-
-
-
-		// // Secure with nonce field check
-		// if (!check_admin_referer('add_pdf_nonce', 'add_pdf_nonce'))
-		// 	return;
-
-		// if (!empty($_FILES)) {
-
-		// 	$uploaddir = plugin_dir_path(__FILE__) . 'uploads/';
-		// 	$uploadfile = $uploaddir . basename($_FILES['file']['name']);
-
-		// 	if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
-		// 		echo "Arquivo válido e enviado com sucesso.\n";
-		// 	} else {
-		// 		trigger_error("Erro ao enviar o arquivo");
-		// 	}
-		// }
 	}
 }

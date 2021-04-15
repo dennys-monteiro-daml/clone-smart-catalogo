@@ -113,6 +113,22 @@
 
         });
 
+        $('#save-product').click(function () {
+            var formData = new FormData();
+            formData.append('action', 'create_product');
+            postRemote({
+                type: 'POST',
+                url: `${wp_object.admin_url}admin-ajax.php`,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            }).then(result => {
+                console.log('got result!', result);
+            })
+
+        });
+
     });
 
 
