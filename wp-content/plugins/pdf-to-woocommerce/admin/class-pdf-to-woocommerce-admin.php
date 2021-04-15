@@ -327,11 +327,13 @@ class Pdf_To_Woocommerce_Admin
 		$fields = array('fabricante');
 
 		foreach ($fields as $field_name) {
-			$field_value = trim($_POST[$field_name]);
-			if (!empty($field_value)) {
-				update_post_meta($post_id, $field_name, $field_value);
-			} else {
-				delete_post_meta($post_id, $field_name);
+			if (isset($_POST[$field_name])) {
+				$field_value = trim($_POST[$field_name]);
+				if (!empty($field_value)) {
+					update_post_meta($post_id, $field_name, $field_value);
+				} else {
+					delete_post_meta($post_id, $field_name);
+				}
 			}
 		}
 

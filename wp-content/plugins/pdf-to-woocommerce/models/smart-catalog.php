@@ -13,7 +13,7 @@ class Smart_Catalog extends Custom_Post_Type_Base
         $this->singular_name = 'Catálogo';
         $this->post_type = 'smart_catalog';
         $this->slug = 'catalogo';
-        $this->icon_id = 'dashicons-analytics';
+        $this->icon_id = 'dashicons-pdf';
         $this->supports = ['title'];
         $this->metabox = 'add_post_type_metabox';
         Smart_Catalog::$instance = $this;
@@ -22,11 +22,11 @@ class Smart_Catalog extends Custom_Post_Type_Base
 
     public function add_post_type_metabox()
     {
-        add_meta_box('fabricante_metabox', 'Fabricante', function () {
-            include_once(plugin_dir_path(dirname(__FILE__)) . 'admin/views/form-select-fabricante.php');
-        });
         add_meta_box('upload_catalog', 'Catálogo', function () {
             include_once(plugin_dir_path(dirname(__FILE__)) . 'admin/views/form-upload-catalog.php');
+        });
+        add_meta_box('fabricante_metabox', 'Fabricante', function () {
+            include_once(plugin_dir_path(dirname(__FILE__)) . 'admin/views/form-select-fabricante.php');
         });
     }
 

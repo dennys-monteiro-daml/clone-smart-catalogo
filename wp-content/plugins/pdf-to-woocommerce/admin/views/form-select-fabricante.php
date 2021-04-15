@@ -10,7 +10,7 @@
     <tr>
         <th></th>
         <td>
-            <button class="button" id="upload-submit">Atualizar</button>
+            <button class="button">Atualizar</button>
             <!-- <a href="#upload-progress" rel="modal:open">Open Modal</a> -->
         </td>
     </tr>

@@ -77,6 +77,8 @@
 
         $('#create-product').click(function () {
             $('#create-product').hide();
+            $('#add-to-product').hide();
+            $('#delete-pdf').hide();
             $('#page-selector').attr('disabled', 'true');
             $('#cancel-product').show();
             $('#full-page').show();
@@ -93,6 +95,8 @@
 
         $('#cancel-product').click(function () {
             $('#create-product').show();
+            $('#add-to-product').show();
+            $('#delete-pdf').show();
             $('#cancel-product').hide();
             $('#full-page').hide();
             $('#new-product-form').hide();

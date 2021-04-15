@@ -16,6 +16,8 @@ if ($pages !== '' && intval($pages) > 0) {
                 </select></th>
             <td>
                 <div class="button button-primary" id="create-product">Criar Produto</div>
+                <div class="button" id="add-to-product">Adicionar a um produto existente</div>
+                <div class="button cancel" id="delete-pdf">Excluir PDF</div>
                 <div class="button cancel" id="cancel-product">Cancelar</div>
                 <div class="button" id="full-page">Página inteira</div>
             </td>
