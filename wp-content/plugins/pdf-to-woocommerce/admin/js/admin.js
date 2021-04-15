@@ -118,8 +118,29 @@
         });
 
         $('#save-product').click(function () {
+
             var formData = new FormData();
             formData.append('action', 'create_product');
+            // formData.append('cropper-js', $('#cropper-js').val());
+
+            const cropperData = JSON.parse($('#cropper-js').val());
+
+            formData.append('cropX', cropperData.x);
+            formData.append('cropY', cropperData.y);
+            formData.append('cropW', cropperData.width);
+            formData.append('cropH', cropperData.height);
+
+            formData.append('product-name', $('#product-name').val());
+            formData.append('product-code', $('#product-code').val());
+            formData.append('category[0]', $('#category-0').val());
+            formData.append('variation', $('#variation').val());
+            formData.append('_height', $('#_height').val());
+            formData.append('_length', $('#_length').val());
+            formData.append('_width', $('#_width').val());
+            formData.append('finishing', $('#finishing').val());
+            formData.append('notes', $('#notes').val());
+            formData.append('catalog_id', $('#post_ID').val());
+            formData.append('catalog_page', $('#page-selector').val());
             postRemote({
                 type: 'POST',
                 url: `${wp_object.admin_url}admin-ajax.php`,
@@ -130,6 +151,10 @@
             }).then(result => {
                 console.log('got result!', result);
             })
+
+        });
+
+        $('#add-category').click(function () {
 
         });
 

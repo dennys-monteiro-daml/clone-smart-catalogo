@@ -18,8 +18,8 @@ if ($pages !== '' && intval($pages) > 0) {
                 <div class="button button-primary" id="create-product">Criar Produto</div>
                 <div class="button" id="add-to-product">Adicionar a um produto existente</div>
                 <div class="button cancel" id="delete-pdf">Excluir PDF</div>
-                <div class="button cancel" id="cancel-product">Cancelar</div>
-                <div class="button" id="full-page">Página inteira</div>
+                <div class="button cancel" id="cancel-product" style="display: none">Cancelar</div>
+                <div class="button" id="full-page" style="display: none">Página inteira</div>
             </td>
         </tr>
     </table>
@@ -29,17 +29,21 @@ if ($pages !== '' && intval($pages) > 0) {
                                         . DIRECTORY_SEPARATOR
                                         . "0.png" ?>" class="img-fluid" />
     </div>
-    <div id="new-product-form">
+    <div id="new-product-form" style="display: none">
         <div class="img-preview"></div>
 
         <table class="form-table">
-            <tr>
-                <th> <label for="category">Categoria</label></th>
+            <tr id='row-category-0'>
+                <th> <label for="category-0">Categoria</label></th>
                 <td>
                     <input name="cropper-js" id="cropper-js" value="" type="hidden" />
-                    <?php
-                    echo get_woocommerce_categories_selector('category');
-                    ?>
+                    <select name="category-0" id="category-0">
+                        <?php
+                        echo get_woocommerce_categories_options();
+                        ?>
+                    </select>
+                    <div class='button button-primary sm-button' id='add-category'>+</div>
+                    <div class='button cancel sm-button' id='rm-category' style="display: none">-</div>
                 </td>
             </tr>
             <tr>
@@ -49,15 +53,23 @@ if ($pages !== '' && intval($pages) > 0) {
                 </td>
             </tr>
             <tr>
+                <th> <label for="product-code">Código</label></th>
+                <td>
+                    <input name="product-code" id="product-code" value="" />
+                </td>
+            </tr>
+            <tr>
                 <th> <label for="variation">Variação</label></th>
                 <td>
                     <input name="variation" id="variation" value="" />
                 </td>
             </tr>
             <tr>
-                <th> <label for="dimensions">Dimensões</label></th>
+                <th> <label>Dimensões (cm)</label></th>
                 <td>
-                    <input name="dimensions" id="dimensions" value="" />
+                    <input name="_length" id="_length" placeholder="Comprimento" class="input-sm" value="" />
+                    <input name="_width" id="_width" placeholder="Largura" class="input-sm" value="" />
+                    <input name="_height" id="_height" placeholder="Altura" class="input-sm" value="" />
                 </td>
             </tr>
             <tr>

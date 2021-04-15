@@ -28,3 +28,12 @@
 .form-table textarea {
     min-width: 80%;
 }
+
+.sm-button {
+    width: 32px;
+}
+
+.form-table input.input-sm {
+    min-width: unset;
+    width: 20%;
+}

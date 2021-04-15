@@ -87,7 +87,8 @@ class Pdf_To_Woocommerce_Admin
 			"admin_url" => get_admin_url(),
 			"convert_pdf_nonce" => wp_create_nonce('convert_pdf_nonce'),
 			"plugin_admin_url" => plugin_dir_url(__FILE__),
-			"converted_folder" => Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER
+			"converted_folder" => Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER,
+			"product_cat" => get_woocommerce_categories_options()
 		));
 	}
 
@@ -251,13 +252,13 @@ class Pdf_To_Woocommerce_Admin
 				die();
 			}
 
-			$uploaddir = Pdf_To_Woocommerce_Admin::get_upload_dir($_POST['post_ID']);
+			$uploaddir = self::get_upload_dir($_POST['post_ID']);
 
 			// for ($i = 0; $i < $page_count; $i++) {
 			$pdf->setPage($i + 1)
 				->saveImage(implode(DIRECTORY_SEPARATOR, array(
 					untrailingslashit($uploaddir),
-					Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER,
+					self::PDF_CONVERTED_FOLDER,
 					"$i.png"
 				)));
 			// }
@@ -290,16 +291,65 @@ class Pdf_To_Woocommerce_Admin
 	{
 		try {
 
+			// crop image and add to WP gallery
+
+			// $cropper = json_decode($_POST['cropper-js']);
+
+			$wordpress_upload_dir = wp_upload_dir();
+			$page_file_path = implode(DIRECTORY_SEPARATOR, array(
+				untrailingslashit(self::get_upload_dir($_POST['catalog_id'])),
+				self::PDF_CONVERTED_FOLDER,
+				$_POST['catalog_page'] . ".png"
+			)); // self::get_upload_dir($_POST['catalog_id']) . ;
+
+			$imagick = new Imagick(realpath($page_file_path));
+
+			$new_file_path = $wordpress_upload_dir['path'] . '/' . "PDF-product-" . time() . ".png";
+
+			// $new_file_path = str_replace(array("/", "\\"), DIRECTORY_SEPARATOR, $new_file_path);
+
+			$imagick->cropImage($_POST['cropW'], $_POST['cropH'], $_POST['cropX'], $_POST['cropY']);
+			$imagick->writeImage($new_file_path);
+
+			$upload_id = wp_insert_attachment(array(
+				'guid'           => $new_file_path,
+				'post_mime_type' => 'image/png',
+				'post_title'     => 'Imagem do produto ' . $_POST['product-name'],
+				'post_content'   => '',
+				'post_status'    => 'inherit'
+			), $new_file_path);
+
+			// require_once(ABSPATH . 'wp-admin/includes/image.php');
+			$meta_data = wp_update_attachment_metadata($upload_id, wp_generate_attachment_metadata($upload_id, $new_file_path));
+
+			// create product
+
 			$product = new WC_Product();
 
-			$product->set_name('Produto teste');
+			$product->set_name($_POST['product-name']);
+			$product->set_sku($_POST['product-code']);
+			$product->set_category_ids($_POST['category']);
+			$product->set_description($_POST['notes']);
+			$product->set_image_id($upload_id);
 			$product->save();
 
+			$id = $product->get_id();
+			// $product->save_meta_data();
+			update_post_meta($id, 'cropper-js', serialize(array(
+				$_POST['cropW'], $_POST['cropH'], $_POST['cropX'], $_POST['cropY']
+			)));
+			update_post_meta($id, 'variation',  $_POST['variation']);
+			update_post_meta($id, '_height',  $_POST['_height']);
+			update_post_meta($id, '_width',  $_POST['_width']);
+			update_post_meta($id, '_length',  $_POST['_length']);
+			update_post_meta($id, 'finishing',  $_POST['finishing']);
+			update_post_meta($id, 'catalog_id',  $_POST['catalog_id']);
+			update_post_meta($id, 'catalog_page',  $_POST['catalog_page']);
 
 			echo json_encode(array(
 				'status' => 'ok',
 				'message' => 'Produto criado',
-				'id' => $product->get_id()
+				'id' => $id
 			), JSON_UNESCAPED_UNICODE);
 			die();
 		} catch (\Exception $error) {

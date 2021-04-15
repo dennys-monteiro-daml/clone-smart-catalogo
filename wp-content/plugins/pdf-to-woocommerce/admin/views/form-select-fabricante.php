@@ -7,11 +7,4 @@
             ?>
         </td>
     </tr>
-    <tr>
-        <th></th>
-        <td>
-            <button class="button">Atualizar</button>
-            <!-- <a href="#upload-progress" rel="modal:open">Open Modal</a> -->
-        </td>
-    </tr>
 </table>
