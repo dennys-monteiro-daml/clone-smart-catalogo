@@ -71,16 +71,15 @@ class Pdf_To_Woocommerce_Admin
 
 	public function enqueue_styles()
 	{
-		wp_enqueue_style($this->plugin_name . 'jquery-modal', "https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css", array(), $this->version, 'all');
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pdf-to-woocommerce-admin.css', array(), $this->version, 'all');
-		wp_enqueue_style($this->plugin_name . 'jquery-cropper', plugin_dir_url(__FILE__) . 'js/lib/node_modules/cropperjs/dist/cropper.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pdf-to-woocommerce-admin.css', array(), $this->version, 'all');	
 	}
 
 	public function enqueue_scripts()
 	{
-		wp_enqueue_script($this->plugin_name . 'jquery-modal', "https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js", array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name . "cropperjs", plugin_dir_url(__FILE__) . 'js/lib/node_modules/cropperjs/dist/cropper.js', array(), $this->version, false);
-		wp_enqueue_script($this->plugin_name . "jquery-cropper", plugin_dir_url(__FILE__) . 'js/lib/node_modules/jquery-cropper/dist/jquery-cropper.js', array('jquery'), $this->version, false);
+
+		// load all node_modules
+		require_once "js/lib/_loader.php";
+
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/admin.js', array('jquery'), $this->version, false);
 		wp_localize_script($this->plugin_name, "wp_object", array(
 			"site_url" => get_site_url(),
