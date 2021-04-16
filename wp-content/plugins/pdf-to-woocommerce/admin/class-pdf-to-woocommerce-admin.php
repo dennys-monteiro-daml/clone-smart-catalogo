@@ -71,7 +71,7 @@ class Pdf_To_Woocommerce_Admin
 
 	public function enqueue_styles()
 	{
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pdf-to-woocommerce-admin.css', array(), $this->version, 'all');	
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pdf-to-woocommerce-admin.css', array(), $this->version, 'all');
 	}
 
 	public function enqueue_scripts()
@@ -290,9 +290,7 @@ class Pdf_To_Woocommerce_Admin
 	{
 		try {
 
-			// crop image and add to WP gallery
-
-			// $cropper = json_decode($_POST['cropper-js']);
+			// crop image and add to WP upload folder
 
 			$wordpress_upload_dir = wp_upload_dir();
 			$page_file_path = implode(DIRECTORY_SEPARATOR, array(
@@ -305,10 +303,10 @@ class Pdf_To_Woocommerce_Admin
 
 			$new_file_path = $wordpress_upload_dir['path'] . '/' . "PDF-product-" . time() . ".png";
 
-			// $new_file_path = str_replace(array("/", "\\"), DIRECTORY_SEPARATOR, $new_file_path);
-
 			$imagick->cropImage($_POST['cropW'], $_POST['cropH'], $_POST['cropX'], $_POST['cropY']);
 			$imagick->writeImage($new_file_path);
+
+			// add image to WP gallery
 
 			$upload_id = wp_insert_attachment(array(
 				'guid'           => $new_file_path,
@@ -318,7 +316,6 @@ class Pdf_To_Woocommerce_Admin
 				'post_status'    => 'inherit'
 			), $new_file_path);
 
-			// require_once(ABSPATH . 'wp-admin/includes/image.php');
 			$meta_data = wp_update_attachment_metadata($upload_id, wp_generate_attachment_metadata($upload_id, $new_file_path));
 
 			// create product
@@ -333,7 +330,6 @@ class Pdf_To_Woocommerce_Admin
 			$product->save();
 
 			$id = $product->get_id();
-			// $product->save_meta_data();
 			update_post_meta($id, 'cropper-js', serialize(array(
 				$_POST['cropW'], $_POST['cropH'], $_POST['cropX'], $_POST['cropY']
 			)));
@@ -355,7 +351,7 @@ class Pdf_To_Woocommerce_Admin
 
 			echo json_encode(array(
 				'status' => 'error',
-				'message' => 'Erro ao criar o produto',
+				'message' => $error,
 				'error' => $error
 			), JSON_UNESCAPED_UNICODE);
 			die();

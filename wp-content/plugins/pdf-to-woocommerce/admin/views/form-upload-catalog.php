@@ -5,7 +5,6 @@ $id = get_the_ID();
 $pages = get_post_meta($id, Smart_Catalog::META_KEY_NUMBER_OF_PAGES, true);
 if ($pages !== '' && intval($pages) > 0) {
 
-
 ?>
     <table class="form-table">
         <tr>
@@ -89,7 +88,10 @@ if ($pages !== '' && intval($pages) > 0) {
             <tr>
                 <th></th>
                 <td>
-                    <div class="button button-primary" id="save-product">Salvar</div>
+                    <div style="max-width: 100px;">
+                        <div class="button button-primary" id="save-product">Salvar</div>
+                        <span id="save-product-spinner" class="spinner"></span>
+                    </div>
                     <!-- <a href="#upload-progress" rel="modal:open">Open Modal</a> -->
                 </td>
             </tr>

@@ -37,3 +37,12 @@
     min-width: unset;
     width: 20%;
 }
+
+#upload-message {
+    font-size: 1.4em;
+    line-height: 1.6;
+}
+
+body .blocker {
+    z-index: 100000;
+}
