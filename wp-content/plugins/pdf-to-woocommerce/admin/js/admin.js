@@ -3,14 +3,14 @@
 
     $(document).ready(function () {
         console.log('window ready!', wp_object);
-        $('.img-preview').css('width', '300px');
-        $('.img-preview').css('height', '300px');
+        // $('.img-preview').css('width', '300px');
+        // $('.img-preview').css('height', '300px');
 
-        $('#cancel-product').hide();
-        $('#full-page').hide();
-        $('#new-product-form').hide();
+        // $('#cancel-product').hide();
+        // $('#full-page').hide();
+        // $('#new-product-form').hide();
 
-        $('#upload-submit').on('click', function () {
+        $('#upload-submit').on('click', async function () {
 
             try {
 
@@ -32,60 +32,62 @@
 
                 $('#upload-message').text("Realizando upload - Não feche esta janela");
 
-                postRemote({
+                const data = await postRemote({
                     type: 'POST',
                     url: `${wp_object.admin_url}admin-ajax.php`,
                     data: formData,
                     cache: false,
                     contentType: false,
                     processData: false
-                }).then(async function (data) {
-                    if (typeof data === 'string') {
-                        data = JSON.parse(data);
-                    }
-                    console.log('success!', data);
-
-                    if (data.status !== 'ok') {
-                        toastr.error(`Houve um erro no envio: ${data.message}`);
-                    }
-
-                    if (data.status === 'ok') {
-
-                        for (var i = 0; i < data.pages; i++) {
-                            $('#upload-message').html(`Conversão em andamento - Não feche esta janela<br/>Convertendo página ${i + 1} de ${data.pages}`);
-                            var formConvert = new FormData();
-                            formConvert.append('convert_pdf_nonce', wp_object.convert_pdf_nonce);
-                            formConvert.append('post_ID', $('#post_ID').val());
-                            formConvert.append('action', 'convert_pdf');
-                            formConvert.append('page', i);
-                            formConvert.append('pdf_location', data.pdf_location);
-
-                            const { status, message } = JSON.parse(await postRemote({
-                                type: 'POST',
-                                url: `${wp_object.admin_url}admin-ajax.php`,
-                                data: formConvert,
-                                cache: false,
-                                contentType: false,
-                                processData: false
-                            }));
-
-                            if (status !== "ok") {
-                                toastr.error(`Houve um erro na conversão: ${message}`);
-                            }
-
-                            $('#upload-bar').attr('value', 100 * i / data.pages);
-
-                            if (i + 1 === data.pages) {
-                                $.modal.close();
-                                toastr.success('Pdf convertido com sucesso!');
-                                setTimeout(() => {
-                                    $('#save-post').click();
-                                }, 200);
-                            }
-
-                        }
-                    }
                 });
+
+                if (typeof data === 'string') {
+                    data = JSON.parse(data);
+                }
+                console.log('success!', data);
+
+                if (data.status !== 'ok') {
+                    toastr.error(`Houve um erro no envio: ${data.message}`);
+                    return;
+                }
+
+                // if (data.status === 'ok') {
+
+                for (var i = 0; i < data.pages; i++) {
+                    $('#upload-message').html(`Conversão em andamento - Não feche esta janela<br/>Convertendo página ${i + 1} de ${data.pages}`);
+                    var formConvert = new FormData();
+                    formConvert.append('convert_pdf_nonce', wp_object.convert_pdf_nonce);
+                    formConvert.append('post_ID', $('#post_ID').val());
+                    formConvert.append('action', 'convert_pdf');
+                    formConvert.append('page', i);
+                    formConvert.append('pdf_location', data.pdf_location);
+
+                    const { status, message } = JSON.parse(await postRemote({
+                        type: 'POST',
+                        url: `${wp_object.admin_url}admin-ajax.php`,
+                        data: formConvert,
+                        cache: false,
+                        contentType: false,
+                        processData: false
+                    }));
+
+                    if (status !== "ok") {
+                        toastr.error(`Houve um erro na conversão: ${message}`);
+                    }
+
+                    $('#upload-bar').attr('value', 100 * i / data.pages);
+
+                    if (i + 1 === data.pages) {
+                        $.modal.close();
+                        toastr.success('Pdf convertido com sucesso!');
+                        setTimeout(() => {
+                            $('#save-post').click();
+                        }, 200);
+                    }
+
+                }
+                //}
+
 
             } catch (error) {
                 toastr.error(`Houve um erro no processamento: ${error}`);
