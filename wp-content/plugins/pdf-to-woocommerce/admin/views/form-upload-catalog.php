@@ -43,7 +43,7 @@ if ($pages !== '' && intval($pages) > 0) {
 
 
 ?>
-    <table class="form-table">
+    <table class="form-table form-upload-catalog">
         <tr>
             <th> <select name="page-selector" id="page-selector">
                     <?php for ($i = 0; $i < $pages; $i++) { ?>

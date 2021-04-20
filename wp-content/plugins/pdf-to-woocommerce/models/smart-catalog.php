@@ -14,7 +14,7 @@ class Smart_Catalog extends Custom_Post_Type_Base
         $this->post_type = 'smart_catalog';
         $this->slug = 'catalogo';
         $this->icon_id = 'dashicons-pdf';
-        $this->supports = ['title'];
+        $this->supports = ['title', 'post-formats', 'page-attributes'];
         $this->metabox = 'add_post_type_metabox';
         Smart_Catalog::$instance = $this;
         // $this->menu_position = 8;

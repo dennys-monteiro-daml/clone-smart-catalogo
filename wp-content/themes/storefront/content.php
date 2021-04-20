@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template used to display post content.
  *
@@ -8,7 +9,7 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-
+	<h1>content.php</h1>
 	<?php
 	/**
 	 * Functions hooked in to storefront_loop_post action.
@@ -17,7 +18,7 @@
 	 * @hooked storefront_post_content         - 30
 	 * @hooked storefront_post_taxonomy        - 40
 	 */
-	do_action( 'storefront_loop_post' );
+	do_action('storefront_loop_post');
 	?>
 
 </article><!-- #post-## -->

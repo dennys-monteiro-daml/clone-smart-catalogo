@@ -24,8 +24,8 @@
     margin-bottom: 20px;
 }
 
-.form-table input,
-.form-table textarea {
+.form-upload-catalog input,
+.form-upload-catalog textarea {
     min-width: 80%;
 }
 
@@ -33,7 +33,7 @@
     width: 32px;
 }
 
-.form-table input.input-sm {
+.form-upload-catalog input.input-sm {
     min-width: unset;
     width: 20%;
 }

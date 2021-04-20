@@ -119,7 +119,7 @@ class Pdf_To_Woocommerce_Public
 		global $post;
 		$arg = get_query_var('post_status');
 		if ($arg != 'uploaded') {
-			if ($post->post_status == 'uploaded') {
+			if (isset($post) && $post->post_status == 'uploaded') {
 				return array('Em demarcação');
 			}
 		}
@@ -146,4 +146,12 @@ class Pdf_To_Woocommerce_Public
 			 ';
 		}
 	}
+
+	function kinsta_books_on_blog_page($query)
+	{
+		if ($query->is_home() && $query->is_main_query()) {
+			$query->set('post_type', array('post', 'smart_catalog'));
+		}
+	}
+
 }

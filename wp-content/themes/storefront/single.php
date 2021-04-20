@@ -8,6 +8,7 @@
 get_header(); ?>
 
 	<div id="primary" class="content-area">
+		<h1>single.php</h1>
 		<main id="main" class="site-main" role="main">
 
 		<?php
