@@ -185,6 +185,7 @@ class Pdf_To_Woocommerce
 		$this->loader->add_action('save_post_' . Smart_Catalog::get_instance()->post_type, $plugin_admin, 'save_catalogo');
 		$this->loader->add_action('wp_ajax_convert_pdf', $plugin_admin, 'convert_pdf_page');
 		$this->loader->add_action('wp_ajax_create_product', $plugin_admin, 'create_product');
+		$this->loader->add_action('script_loader_tag', $plugin_admin, 'script_loader_tag', 10, 3);
 		
 	}
 

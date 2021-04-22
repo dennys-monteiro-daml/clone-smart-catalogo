@@ -74,6 +74,9 @@ define("DATA_LAYER_CONFIG", [
     ]
 ]);
 
+define("PDF_TO_WOOCOMMERCE_URL", plugin_dir_url( __FILE__ ));
+define("PDF_TO_WOOCOMMERCE_PATH", plugin_dir_path( __FILE__ ));
+
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.

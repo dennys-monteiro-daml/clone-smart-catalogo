@@ -38,18 +38,20 @@ class Post_Meta_Data extends DataLayer
 
             for ($i = 0; $i < sizeof($posts); $i++) {
 
-                $_ENV['temp_ID'] = $posts[$i]->ID;
-
-                $post_meta = array_filter($meta_data, function (Post_Meta_Data $item) {
-                    return $item->post_id === $_ENV['temp_ID'];
+                $post_meta = array_filter($meta_data, function (Post_Meta_Data $item) use ($posts, $i) {
+                    return $item->post_id === $posts[$i]->ID;
                 });
-
-                unset($_ENV['temp_ID']);
 
                 $posts[$i]->post_meta = array();
 
                 foreach($post_meta as $meta) {
-                    $posts[$i]->post_meta[$meta->meta_key] = $meta->meta_value;
+                    $data = @unserialize($meta->meta_value);
+                    if ($data != false) {
+                        $posts[$i]->post_meta[$meta->meta_key] = $data;
+                    } else {
+                        $posts[$i]->post_meta[$meta->meta_key] = $meta->meta_value;
+                    }
+                    
                 }
 
             }

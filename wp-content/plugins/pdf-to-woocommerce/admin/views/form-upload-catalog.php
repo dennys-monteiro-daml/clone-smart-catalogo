@@ -5,6 +5,42 @@ $id = get_the_ID();
 $pages = get_post_meta($id, Smart_Catalog::META_KEY_NUMBER_OF_PAGES, true);
 if ($pages !== '' && intval($pages) > 0) {
 
+    $posts = new Post_Data();
+
+    $posts = $posts->find("post_type = 'product' AND post_status = 'publish'")->fetch(true);
+
+    if (!is_null($posts)) {
+        Post_Meta_Data::attach_meta($posts);
+
+        // print_r($posts[0]->post_meta);
+
+        $arr = array_values(array_filter($posts, function ($post) use ($id) {
+            return isset($post->post_meta['catalog_id']) && $post->post_meta['catalog_id'] == $id;
+        }));
+
+        $arr = array_map(
+            function ($item) {
+                return array(
+                    'data' => $item->data(),
+                    'post_meta' => $item->post_meta,
+                    // 'item' => $item
+                );
+            },
+            $arr
+        );
+
+    }
+
+    if (!isset($arr)) {
+        $arr = array();
+    }
+
+    wp_enqueue_script("pdf-products", PDF_TO_WOOCOMMERCE_URL . "admin/js/products.js");
+    wp_localize_script("pdf-products", "wp_products", array(
+        'products' => $arr,
+    ));
+
+
 ?>
     <table class="form-table">
         <tr>
@@ -19,9 +55,13 @@ if ($pages !== '' && intval($pages) > 0) {
                 <div class="button cancel" id="delete-pdf">Excluir PDF</div>
                 <div class="button cancel" id="cancel-product" style="display: none">Cancelar</div>
                 <div class="button" id="full-page" style="display: none">Página inteira</div>
+                <i class="fas fa-edit"></i>
             </td>
         </tr>
     </table>
+    <div class="product-overlay" id="main-product-overlay" hidden>
+
+    </div>
     <div class="img-container">
         <img id="catalog-page" src="<?php echo Pdf_To_Woocommerce_Admin::get_upload_url($id)
                                         . Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER
@@ -29,7 +69,7 @@ if ($pages !== '' && intval($pages) > 0) {
                                         . "0.png" ?>" class="img-fluid" />
     </div>
     <div id="new-product-form" style="display: none">
-        <div class="img-preview"></div>
+        <div class="img-preview" style="width: 300px; height: 300px;"></div>
 
         <table class="form-table">
             <tr id='row-category-0'>

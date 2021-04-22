@@ -69,6 +69,17 @@ class Pdf_To_Woocommerce_Admin
 		$this->version = $version;
 	}
 
+	public function script_loader_tag($tag, $handle, $src)
+	{
+		// if not your script, do nothing and return original $tag
+		if ($this->plugin_name . "-icons" !== $handle) {
+			return $tag;
+		}
+		// change the script tag by adding type="module" and return it.
+		$tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+		return $tag;
+	}
+
 	public function enqueue_styles()
 	{
 		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pdf-to-woocommerce-admin.css', array(), $this->version, 'all');
@@ -79,6 +90,8 @@ class Pdf_To_Woocommerce_Admin
 
 		// load all node_modules
 		require_once "js/lib/_loader.php";
+
+		wp_enqueue_script($this->plugin_name . "-icons", plugin_dir_url(__FILE__) . 'js/icons.js', array(), $this->version, false);
 
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/admin.js', array('jquery'), $this->version, false);
 		wp_localize_script($this->plugin_name, "wp_object", array(
@@ -330,9 +343,15 @@ class Pdf_To_Woocommerce_Admin
 			$product->save();
 
 			$id = $product->get_id();
-			update_post_meta($id, 'cropper-js', serialize(array(
-				$_POST['cropW'], $_POST['cropH'], $_POST['cropX'], $_POST['cropY']
-			)));
+			// update_post_meta($id, 'cropper-js', serialize(array(
+			// 	$_POST['cropW'], $_POST['cropH'], $_POST['cropX'], $_POST['cropY']
+			// )));
+			update_post_meta($id, 'cropped', json_encode(array(
+				'width' => $_POST['cropW'],
+				'height' => $_POST['cropH'],
+				'x' => $_POST['cropX'],
+				'y' => $_POST['cropY'],
+			), JSON_UNESCAPED_UNICODE));
 			update_post_meta($id, 'variation',  $_POST['variation']);
 			update_post_meta($id, '_height',  $_POST['_height']);
 			update_post_meta($id, '_width',  $_POST['_width']);
