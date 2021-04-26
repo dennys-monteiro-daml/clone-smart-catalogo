@@ -153,82 +153,82 @@
 
         });
 
-        $('#save-product').click(function () {
+        // $('#save-product').click(function () {
 
-            $(this).attr('disabled', 'true');
-            $(this).addClass('disabled');
+        //     $(this).attr('disabled', 'true');
+        //     $(this).addClass('disabled');
 
-            $('#save-product-spinner').addClass('is-active');
+        //     $('#save-product-spinner').addClass('is-active');
 
-            var formData = new FormData();
-            formData.append('action', 'create_product');
+        //     var formData = new FormData();
+        //     formData.append('action', 'create_product');
 
-            const cropperData = JSON.parse($('#cropper-js').val());
+        //     const cropperData = JSON.parse($('#cropper-js').val());
 
-            formData.append('cropX', cropperData.x);
-            formData.append('cropY', cropperData.y);
-            formData.append('cropW', cropperData.width);
-            formData.append('cropH', cropperData.height);
+        //     formData.append('cropX', cropperData.x);
+        //     formData.append('cropY', cropperData.y);
+        //     formData.append('cropW', cropperData.width);
+        //     formData.append('cropH', cropperData.height);
 
-            formData.append('product-name', $('#product-name').val());
-            formData.append('product-code', $('#product-code').val());
-            formData.append('category[0]', $('#category-0').val());
-            formData.append('variation', $('#variation').val());
-            formData.append('_height', $('#_height').val());
-            formData.append('_length', $('#_length').val());
-            formData.append('_width', $('#_width').val());
-            formData.append('finishing', $('#finishing').val());
-            formData.append('notes', $('#notes').val());
-            formData.append('catalog_id', $('#post_ID').val());
-            formData.append('catalog_page', $('#page-selector').val());
+        //     formData.append('product-name', $('#product-name').val());
+        //     formData.append('product-code', $('#product-code').val());
+        //     formData.append('category[0]', $('#category-0').val());
+        //     formData.append('variation', $('#variation').val());
+        //     formData.append('_height', $('#_height').val());
+        //     formData.append('_length', $('#_length').val());
+        //     formData.append('_width', $('#_width').val());
+        //     formData.append('finishing', $('#finishing').val());
+        //     formData.append('notes', $('#notes').val());
+        //     formData.append('catalog_id', $('#post_ID').val());
+        //     formData.append('catalog_page', $('#page-selector').val());
 
-            postRemote({
-                type: 'POST',
-                url: `${wp_object.admin_url}admin-ajax.php`,
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false
-            }).then((result) => {
+        //     postRemote({
+        //         type: 'POST',
+        //         url: `${wp_object.admin_url}admin-ajax.php`,
+        //         data: formData,
+        //         cache: false,
+        //         contentType: false,
+        //         processData: false
+        //     }).then((result) => {
 
-                $('#save-product-spinner').removeClass('is-active');
+        //         $('#save-product-spinner').removeClass('is-active');
 
-                if (typeof result === 'string') {
-                    result = JSON.parse(result);
-                }
+        //         if (typeof result === 'string') {
+        //             result = JSON.parse(result);
+        //         }
 
-                console.log('got result!', result);
+        //         console.log('got result!', result);
 
-                if (result.status === 'ok') {
-                    toastr.success(`Produto criado com sucesso! ID do produto: ${result.id}.`);
+        //         if (result.status === 'ok') {
+        //             toastr.success(`Produto criado com sucesso! ID do produto: ${result.id}.`);
 
-                    $('#create-product').show();
-                    $('#add-to-product').show();
-                    $('#delete-pdf').show();
-                    $('#cancel-product').hide();
-                    $('#full-page').hide();
-                    $('#new-product-form').hide();
-                    $('#page-selector').removeAttr('disabled');
-                    $('#catalog-page').cropper('destroy');
+        //             $('#create-product').show();
+        //             $('#add-to-product').show();
+        //             $('#delete-pdf').show();
+        //             $('#cancel-product').hide();
+        //             $('#full-page').hide();
+        //             $('#new-product-form').hide();
+        //             $('#page-selector').removeAttr('disabled');
+        //             $('#catalog-page').cropper('destroy');
 
-                    $('#product-name').val('');
-                    $('#product-code').val('');
-                    $('#category-0').val('');
-                    $('#variation').val('');
-                    $('#_height').val('');
-                    $('#_length').val('');
-                    $('#_width').val('');
-                    $('#finishing').val('');
-                    $('#notes').val('');
+        //             $('#product-name').val('');
+        //             $('#product-code').val('');
+        //             $('#category-0').val('');
+        //             $('#variation').val('');
+        //             $('#_height').val('');
+        //             $('#_length').val('');
+        //             $('#_width').val('');
+        //             $('#finishing').val('');
+        //             $('#notes').val('');
 
-                    return;
-                }
-                toastr.error(`Houve um erro na criação do produto: ${result.message}`);
+        //             return;
+        //         }
+        //         toastr.error(`Houve um erro na criação do produto: ${result.message}`);
 
 
-            })
+        //     })
 
-        });
+        // });
 
         $('#add-category').click(function () {
             // TODO add + de 1 categoria

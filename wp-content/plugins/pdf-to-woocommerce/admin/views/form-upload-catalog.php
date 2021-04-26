@@ -38,6 +38,7 @@ if ($pages !== '' && intval($pages) > 0) {
     wp_enqueue_script("pdf-products", PDF_TO_WOOCOMMERCE_URL . "admin/js/products.js");
     wp_localize_script("pdf-products", "wp_products", array(
         'products' => $arr,
+        'admin_url' => get_admin_url(),
     ));
 
 

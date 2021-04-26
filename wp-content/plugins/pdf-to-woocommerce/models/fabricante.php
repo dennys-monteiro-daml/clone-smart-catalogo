@@ -40,7 +40,7 @@ class Fabricante extends Custom_Post_Type_Base
         /** @var Post_Data[] */
         $posts = $post_data->find("post_type = 'fabricante' AND post_status = 'publish'")->fetch(true);
 
-        $options = '<option> -- Selecione -- </option>';
+        $options = '<option value=""> -- Selecione -- </option>';
         foreach ($posts as $post) {
             $value = $post->ID;
             $label = $post->post_title;
