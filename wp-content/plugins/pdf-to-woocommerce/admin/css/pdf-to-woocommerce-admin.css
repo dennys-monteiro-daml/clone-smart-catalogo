@@ -50,8 +50,13 @@ body .blocker {
 .product-overlay {
     /* width: 300px;
     height: 300px; */
-    background-color: #FFFFFF33;
+    background-color: #ffffff33;
     position: absolute;
     /* z-index: 100; */
     border: red dashed;
+}
+
+.product-overlay a {
+    background-color: #f5f5e6;
+    padding: 0 5px 5px 5px;
 }

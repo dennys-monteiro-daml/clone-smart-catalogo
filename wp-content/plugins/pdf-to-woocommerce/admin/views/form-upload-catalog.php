@@ -55,7 +55,7 @@ if ($pages !== '' && intval($pages) > 0) {
                 <div class="button cancel" id="delete-pdf">Excluir PDF</div>
                 <div class="button cancel" id="cancel-product" style="display: none">Cancelar</div>
                 <div class="button" id="full-page" style="display: none">Página inteira</div>
-                <i class="fas fa-edit"></i>
+                <!-- <i class="fas fa-edit"></i> -->
             </td>
         </tr>
     </table>

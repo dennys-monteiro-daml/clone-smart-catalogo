@@ -36,7 +36,7 @@
             items.forEach((item, i) => {
 
                 $(`<div class="product-overlay" id="overlay-${i}">
-                    <a href="/wp-admin/post.php?post=${item.data.ID}&action=edit" target="_blank">Editar produto <i class="fas fa-edit"></i></a>
+                    <a href="/wp-admin/post.php?post=${item.data.ID}&action=edit" target="_blank"><i class="fas fa-edit"></i></a>
                 </div>`).insertAfter('#main-product-overlay');
 
                 console.log('will render item ', item);
