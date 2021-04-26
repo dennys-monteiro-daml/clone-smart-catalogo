@@ -18,20 +18,7 @@
 	// echo "<pre>";
 	// print_r($posts);
 	// echo "</pre>";
-	$id = get_the_ID();
-	$number_of_pages = get_post_meta($id, 'number_of_pages', true);
-	if (!empty($number_of_pages) && intval($number_of_pages) > 0) {
-		$number_of_pages = intval($number_of_pages);
-		for ($i = 0; $i < $number_of_pages; $i++) {
-			?>
-			<img src="<?php echo Pdf_To_Woocommerce_Admin::get_upload_url($id)
-                            . Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER
-                            . DIRECTORY_SEPARATOR
-                            . "$i.png" ?>" class="img-fluid" />
-			<?php
-		}
-	}
-
+	
 	/**
 	 * Functions hooked in to storefront_loop_post action.
 	 *
