@@ -154,62 +154,17 @@ class Pdf_To_Woocommerce_Public
 		}
 	}
 
-	function storefront_single_post()
+	function add_script_to_catalog($products = array())
 	{
-		$id = get_the_ID();
-
-		$post_type = get_post_type($id);
-		$smart_catalog = Smart_Catalog::get_instance()->post_type;
-
-		if ($post_type === $smart_catalog) {
-
-			$query = new WP_Query(array(
-				'post_type' => 'product',
-				'meta_query' => array(
-					array(
-						'key' => 'catalog_id',
-						'value' => $id,
-						'compare' => '='
-					)
-				),
-			));
-
-			$products = array();
-
-			if ($query->have_posts()) {
-				echo '<ul>';
-				while ($query->have_posts()) {
-					$query->the_post();
-					$product_id = get_the_ID();
-					$products[] = array(
-						'title' => get_the_title(),
-						'url' => get_permalink($product_id),
-						'catalog_page' => get_post_meta($product_id, 'catalog_page', true),
-						'cropped' => get_post_meta($product_id, 'cropped', true),
-					);
-					echo '<li>' . get_the_ID() . '- ' . get_the_title() . '</li>';
-					echo "<pre>";
-					print_r($products[sizeof($products) - 1]);
-					echo "</pre>";
-				}
-				echo '</ul>';
-			}
-
-			wp_reset_postdata();
-
-			$number_of_pages = get_post_meta($id, 'number_of_pages', true);
-
-			if (!empty($number_of_pages) && intval($number_of_pages) > 0) {
-				$number_of_pages = intval($number_of_pages);
-				for ($i = 0; $i < $number_of_pages; $i++) {
-?>
-					<img src="<?php echo Pdf_To_Woocommerce_Admin::get_upload_url($id)
-									. Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER
-									. DIRECTORY_SEPARATOR
-									. "$i.png" ?>" class="img-fluid" />
-<?php
-				}
-			}
+		if (!get_post_type(get_the_ID()) === Smart_Catalog::get_instance()->post_type) {
+			return;
 		}
+
+		$handle = $this->plugin_name . '-products';
+		wp_enqueue_script($handle, plugin_dir_url(__FILE__) . 'js/products.js', array('jquery'), $this->version, false);
+		wp_localize_script($handle, 'wp_products', array(
+			'products' => $products
+		));
 	}
+	
 }
