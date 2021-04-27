@@ -35,7 +35,10 @@ class Custom_Post_Type_Base
             'menu_position'   => $this->menu_position,
             'menu_icon'       => (version_compare($GLOBALS['wp_version'], '3.8', '>=')) ? $this->icon_id : false,
             'has_archive'     => true,
-            'publicly_queryable'  => false,
+            'publicly_queryable'  => true,
+            'exclude_from_search' => false,
+            'show_ui' => true,
+            'show_in_menu' => true,
             'supports'        => $this->supports,
             //'supports' => array('title','editor','thumbnail','comments', 'excerpt', 'custom-fields', 'revisions', 'trackbacks')
         );
