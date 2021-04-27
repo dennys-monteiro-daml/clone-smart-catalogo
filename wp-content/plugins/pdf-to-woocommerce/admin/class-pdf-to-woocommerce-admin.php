@@ -378,12 +378,12 @@ class Pdf_To_Woocommerce_Admin
 	}
 
 
-	public function save_catalogo($post_id)
+	public function save_catalogo(int $post_id, WP_Post $post)
 	{
-		$post = get_post($post_id);
+		// $post = get_post($post_id);
 		$is_revision = wp_is_post_revision($post_id);
 
-		if ($post->post_type != Smart_Catalog::get_instance()->post_type || $is_revision)
+		if ($is_revision)
 			return;
 
 		$number_of_pages = get_post_meta($post_id, Smart_Catalog::META_KEY_NUMBER_OF_PAGES, true);
@@ -402,7 +402,7 @@ class Pdf_To_Woocommerce_Admin
 		}
 
 		// Do not change status if post is published OR uploaded
-		if ($post->post_status === 'published' || $post->post_status === 'uploaded' || $post->post_status === 'trash')
+		if ($post->post_status === 'publish' || $post->post_status === 'uploaded' || $post->post_status === 'trash')
 			return;
 
 		if ($number_of_pages != '' && intval($number_of_pages) > 0) {

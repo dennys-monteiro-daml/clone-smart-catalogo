@@ -30,7 +30,7 @@ class Custom_Post_Type_Base
         $args = array(
             'labels' => xcompile_post_type_labels($this->singular_name, $this->name),
             'public'          => true,
-            'capability_type' => 'post',
+            'capability_type' => 'page',
             'rewrite'         => array('slug' => $this->slug), // Permalinks format
             'menu_position'   => $this->menu_position,
             'menu_icon'       => (version_compare($GLOBALS['wp_version'], '3.8', '>=')) ? $this->icon_id : false,
