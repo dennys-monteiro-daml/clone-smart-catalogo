@@ -8,7 +8,6 @@
 
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<h1>content-page.php</h1>
 	<?php
 	/**
 	 * Functions hooked in to storefront_page add_action

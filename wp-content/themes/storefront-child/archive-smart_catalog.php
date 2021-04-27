@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The template for displaying archive pages.
+ * The template for displaying smart_catalog list.
  *
  * Learn more: https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
@@ -16,7 +16,6 @@ get_header(); ?>
 		<?php if (have_posts()) : ?>
 
 			<header class="page-header">
-				<h1> WOOHOO</h1>
 				<?php
 				the_archive_title('<h1 class="page-title">', '</h1>');
 				the_archive_description('<div class="taxonomy-description">', '</div>');

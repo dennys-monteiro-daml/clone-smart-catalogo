@@ -9,7 +9,6 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<h1>content.php</h1>
 	<?php
 	// $posts = new Post_Data();
 	// /** @var Post_Data */

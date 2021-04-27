@@ -9,7 +9,6 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<h1>content-single.php</h1>
 	<?php
 	do_action('storefront_single_post_top');
 

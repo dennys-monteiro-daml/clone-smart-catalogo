@@ -14,7 +14,6 @@
 get_header(); ?>
 
 	<div id="primary" class="content-area">
-		<h1>index.php</h1>
 		<main id="main" class="site-main" role="main">
 
 		<?php

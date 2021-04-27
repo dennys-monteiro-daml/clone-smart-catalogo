@@ -208,7 +208,8 @@ class Pdf_To_Woocommerce
 		$this->loader->add_filter('display_post_states', $plugin_public, 'display_post_states');
 		$this->loader->add_action('admin_footer-post.php', $plugin_public, 'jc_append_post_status_list');
 		$this->loader->add_action('pre_get_posts', $plugin_public, 'kinsta_books_on_blog_page');
-		$this->loader->add_action('storefront_loop_post', $plugin_public, 'storefront_loop_post');
+		//$this->loader->add_action('storefront_loop_post', $plugin_public, 'storefront_loop_post');
+		$this->loader->add_action('storefront_single_post_bottom', $plugin_public, 'storefront_single_post');
 	}
 
 	/**
