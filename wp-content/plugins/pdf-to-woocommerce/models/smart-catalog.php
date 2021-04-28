@@ -14,9 +14,9 @@ class Smart_Catalog extends Custom_Post_Type_Base
         $this->post_type = 'smart_catalog';
         $this->slug = 'catalogo';
         $this->icon_id = 'dashicons-pdf';
-        $this->supports = ['title', 'editor','custom-fields','post-formats', 'page-attributes'];
+        $this->supports = ['title', 'editor', 'post-formats', 'page-attributes'];
         $this->metabox = 'add_post_type_metabox';
-        Smart_Catalog::$instance = $this;
+        self::$instance = $this;
         // $this->menu_position = 8;
     }
 
@@ -45,7 +45,7 @@ class Smart_Catalog extends Custom_Post_Type_Base
             'public'                    => true,
             'show_in_admin_all_list'    => false,
             'show_in_admin_status_list' => true,
-            'label_count'               => _n_noop( 'Em demarcação <span class="count">(%s)</span>', 'Em demarcação <span class="count">(%s)</span>' )
+            'label_count'               => _n_noop('Em demarcação <span class="count">(%s)</span>', 'Em demarcação <span class="count">(%s)</span>')
         ));
     }
 }

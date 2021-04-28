@@ -114,8 +114,8 @@ class Pdf_To_Woocommerce
 		/**
 		 * The Post_Data and Post_Meta_Data classes
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-post-data.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-post-meta-data.php';
+		// require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-post-data.php';
+		// require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-post-meta-data.php';
 
 		/**
 		 * The Models

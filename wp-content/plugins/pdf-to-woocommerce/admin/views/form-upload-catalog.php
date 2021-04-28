@@ -5,31 +5,65 @@ $id = get_the_ID();
 $pages = get_post_meta($id, Smart_Catalog::META_KEY_NUMBER_OF_PAGES, true);
 if ($pages !== '' && intval($pages) > 0) {
 
-    $posts = new Post_Data();
+    // $posts = new Post_Data();
 
-    $posts = $posts->find("post_type = 'product' AND post_status = 'publish'")->fetch(true);
+    // $posts = $posts->find("post_type = 'product' AND post_status = 'publish'")->fetch(true);
 
-    if (!is_null($posts)) {
-        Post_Meta_Data::attach_meta($posts);
+    $product_query = new WP_Query(array(
+        'post_type' => 'product',
+        'posts_per_page' => -1,
+        'meta_query' => array(
+            array(
+                'key' => 'catalog_id',
+                'value' => $id,
+                'compare' => '='
+            )
+        ),
+    ));
 
-        // print_r($posts[0]->post_meta);
+    $arr = array();
 
-        $arr = array_values(array_filter($posts, function ($post) use ($id) {
-            return isset($post->post_meta['catalog_id']) && $post->post_meta['catalog_id'] == $id;
-        }));
+    if ($product_query->have_posts()) {
+        // echo '<p>Produtos no catálogo: </p>';
+        // echo '<ul>';
+        while ($product_query->have_posts()) {
+            $product_query->the_post();
+            $product_id = $product_query->post->ID;
 
-        $arr = array_map(
-            function ($item) {
-                return array(
-                    'data' => $item->data(),
-                    'post_meta' => $item->post_meta,
-                    // 'item' => $item
-                );
-            },
-            $arr
-        );
-
+            // montar array dos produtos
+            $arr[] = array(
+                'data' => $product_query->post,
+                'post_meta' => array(
+                    'catalog_page' => get_post_meta($product_id, 'catalog_page', true),
+                    'cropped' => get_post_meta($product_id, 'cropped', true),
+                )
+            );
+            // echo '<li>' . get_the_ID() . '- ' . get_the_title() . '</li>';
+        }
+        // echo '</ul>';
     }
+    wp_reset_postdata();
+    // if (!is_null($posts)) {
+    //     Post_Meta_Data::attach_meta($posts);
+
+    //     // print_r($posts[0]->post_meta);
+
+    //     $arr = array_values(array_filter($posts, function ($post) use ($id) {
+    //         return isset($post->post_meta['catalog_id']) && $post->post_meta['catalog_id'] == $id;
+    //     }));
+
+    //     $arr = array_map(
+    //         function ($item) {
+    //             return array(
+    //                 'data' => $item->data(),
+    //                 'post_meta' => $item->post_meta,
+    //                 // 'item' => $item
+    //             );
+    //         },
+    //         $arr
+    //     );
+
+    // }
 
     if (!isset($arr)) {
         $arr = array();

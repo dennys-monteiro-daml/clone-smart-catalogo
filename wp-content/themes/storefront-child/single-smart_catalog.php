@@ -31,6 +31,7 @@ get_header(); ?>
 						'compare' => '='
 					)
 				),
+				'posts_per_page' => -1,
 			));
 			$products = array();
 
