@@ -24,12 +24,12 @@ if ($pages !== '' && intval($pages) > 0) {
     $arr = array();
 
     if ($product_query->have_posts()) {
-        // echo '<p>Produtos no catálogo: </p>';
-        // echo '<ul>';
         while ($product_query->have_posts()) {
             $product_query->the_post();
             $product_id = $product_query->post->ID;
 
+            update_post_meta($product_id, '_price', 0);
+            update_post_meta($product_id, '_regular_price', 0);
             // montar array dos produtos
             $arr[] = array(
                 'data' => $product_query->post,
@@ -38,32 +38,10 @@ if ($pages !== '' && intval($pages) > 0) {
                     'cropped' => get_post_meta($product_id, 'cropped', true),
                 )
             );
-            // echo '<li>' . get_the_ID() . '- ' . get_the_title() . '</li>';
         }
-        // echo '</ul>';
     }
     wp_reset_postdata();
-    // if (!is_null($posts)) {
-    //     Post_Meta_Data::attach_meta($posts);
-
-    //     // print_r($posts[0]->post_meta);
-
-    //     $arr = array_values(array_filter($posts, function ($post) use ($id) {
-    //         return isset($post->post_meta['catalog_id']) && $post->post_meta['catalog_id'] == $id;
-    //     }));
-
-    //     $arr = array_map(
-    //         function ($item) {
-    //             return array(
-    //                 'data' => $item->data(),
-    //                 'post_meta' => $item->post_meta,
-    //                 // 'item' => $item
-    //             );
-    //         },
-    //         $arr
-    //     );
-
-    // }
+    
 
     if (!isset($arr)) {
         $arr = array();

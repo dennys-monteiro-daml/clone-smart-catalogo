@@ -206,6 +206,18 @@ class Pdf_To_Woocommerce
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 		$this->loader->add_filter('display_post_states', $plugin_public, 'display_post_states');
+
+		$this->loader->add_filter('woocommerce_get_price_html', $plugin_public, 'hide_free_price_notice');
+		// $this->loader->add_filter('woocommerce_variable_free_price_html', $plugin_public, 'hide_free_price_notice');
+		// $this->loader->add_filter('woocommerce_variation_free_price_html', $plugin_public, 'hide_free_price_notice');
+
+		$this->loader->add_filter('woocommerce_product_single_add_to_cart_text', $plugin_public, 'woo_custom_cart_button_text');
+		$this->loader->add_filter('woocommerce_product_add_to_cart_text', $plugin_public, 'woo_custom_cart_button_text');
+
+		$this->loader->add_filter('woocommerce_order_button_text', $plugin_public, 'woo_order_button_text');
+
+		$this->loader->add_filter('woocommerce_thankyou_order_received_text', $plugin_public, 'woo_thankyou_text' );
+
 		$this->loader->add_action('admin_footer-post.php', $plugin_public, 'jc_append_post_status_list');
 		$this->loader->add_action('pre_get_posts', $plugin_public, 'kinsta_books_on_blog_page');
 		//$this->loader->add_action('storefront_loop_post', $plugin_public, 'storefront_loop_post');

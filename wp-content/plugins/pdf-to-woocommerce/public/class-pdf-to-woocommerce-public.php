@@ -166,5 +166,31 @@ class Pdf_To_Woocommerce_Public
 			'products' => $products
 		));
 	}
-	
+
+	function hide_free_price_notice($product)
+	{
+		global $product;
+		$price = $product->get_price();
+
+		if ($price == '0.00' || $price == '0') {
+			return 'Consulte o preço';
+		} else {
+			return "R$ " . $price;
+		}
+	}
+
+	function woo_custom_cart_button_text()
+	{
+		return "+ Lista";
+	}
+
+	function woo_thankyou_text()
+	{
+		return "Obrigado. Retornaremos com o orçamento em breve.";
+	}
+
+	function woo_order_button_text()
+	{
+		return "Solicitar orçamento";
+	}
 }
