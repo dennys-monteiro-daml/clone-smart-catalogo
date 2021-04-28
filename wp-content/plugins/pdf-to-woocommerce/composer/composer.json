@@ -1,5 +1,6 @@
 {
     "require": {
-        "bnbwebexpertise/pdf-to-image": "^1.2"
+        "bnbwebexpertise/pdf-to-image": "^1.2",
+        "symfony/polyfill-mbstring": "1.19"
     }
 }
