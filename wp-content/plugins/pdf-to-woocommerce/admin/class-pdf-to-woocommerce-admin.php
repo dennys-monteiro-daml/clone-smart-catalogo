@@ -1,6 +1,6 @@
 <?php
 
-use Spatie\PdfToImage\Pdf;
+use Bnb\PdfToImage\Pdf;
 
 /**
  * The admin-specific functionality of the plugin.

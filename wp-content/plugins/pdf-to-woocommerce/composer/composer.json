@@ -1,5 +1,5 @@
 {
     "require": {
-        "spatie/pdf-to-image": "2.1.*"
+        "bnbwebexpertise/pdf-to-image": "^1.2"
     }
 }
