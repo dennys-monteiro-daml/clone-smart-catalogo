@@ -25,7 +25,7 @@ use Bnb\PdfToImage\Pdf;
 class Pdf_To_Woocommerce_Admin
 {
 
-	public const PDF_CONVERTED_FOLDER = 'converted';
+	const PDF_CONVERTED_FOLDER = 'converted';
 
 	public static function get_upload_dir($post_id)
 	{

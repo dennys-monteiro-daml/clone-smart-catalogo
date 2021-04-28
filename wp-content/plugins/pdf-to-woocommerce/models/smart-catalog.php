@@ -3,7 +3,7 @@
 class Smart_Catalog extends Custom_Post_Type_Base
 {
 
-    public const META_KEY_NUMBER_OF_PAGES = 'number_of_pages';
+    const META_KEY_NUMBER_OF_PAGES = 'number_of_pages';
 
     private static $instance;
 
