@@ -375,7 +375,7 @@ class Pdf_To_Woocommerce_Admin
 			echo json_encode(array(
 				'status' => 'error',
 				'message' => $error,
-				'error' => $error
+				'error' => $error->getMessage()
 			), JSON_UNESCAPED_UNICODE);
 			die();
 		}
