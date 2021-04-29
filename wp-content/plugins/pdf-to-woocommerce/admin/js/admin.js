@@ -68,7 +68,8 @@
                     }));
 
                     if (status !== "ok") {
-                        toastr.error(`Houve um erro na conversão: ${message}`);
+                        // toastr.error(`Houve um erro na conversão: ${message}`);
+                        throw new Error('Erro na conversão para imagem.');
                     }
 
                     $('#upload-bar').attr('value', 100 * i / data.pages);

@@ -253,8 +253,10 @@ class Pdf_To_Woocommerce_Admin
 			$uploadfile = $_POST['pdf_location'];
 			$i = $_POST['page'];
 
+			echo "Will load Pdf..";
 			$pdf = new Pdf($uploadfile);
 			$page_count = $pdf->getNumberOfPages();
+			echo "\nNumber of pages: $page_count";
 
 			if ($i >= $page_count || $i < 0) {
 				echo json_encode(array(
@@ -266,13 +268,15 @@ class Pdf_To_Woocommerce_Admin
 
 			$uploaddir = self::get_upload_dir($_POST['post_ID']);
 
+			$imgPath = implode(DIRECTORY_SEPARATOR, array(
+				untrailingslashit($uploaddir),
+				self::PDF_CONVERTED_FOLDER,
+				"$i.png"
+			));
+			echo "\nWill save into -> $imgPath";
 			// for ($i = 0; $i < $page_count; $i++) {
 			$pdf->setPage($i + 1)
-				->saveImage(implode(DIRECTORY_SEPARATOR, array(
-					untrailingslashit($uploaddir),
-					self::PDF_CONVERTED_FOLDER,
-					"$i.png"
-				)));
+				->saveImage($imgPath);
 			// }
 			if ($page_count == $i + 1) {
 				update_post_meta($_POST['post_ID'], Smart_Catalog::META_KEY_NUMBER_OF_PAGES, $page_count);
