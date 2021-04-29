@@ -253,10 +253,8 @@ class Pdf_To_Woocommerce_Admin
 			$uploadfile = $_POST['pdf_location'];
 			$i = $_POST['page'];
 
-			echo "Will load Pdf..";
 			$pdf = new Pdf($uploadfile);
 			$page_count = $pdf->getNumberOfPages();
-			echo "\nNumber of pages: $page_count";
 
 			if ($i >= $page_count || $i < 0) {
 				echo json_encode(array(
@@ -273,7 +271,6 @@ class Pdf_To_Woocommerce_Admin
 				self::PDF_CONVERTED_FOLDER,
 				"$i.png"
 			));
-			echo "\nWill save into -> $imgPath";
 			// for ($i = 0; $i < $page_count; $i++) {
 			$pdf->setPage($i + 1)
 				->saveImage($imgPath);
@@ -297,7 +294,7 @@ class Pdf_To_Woocommerce_Admin
 			echo json_encode(array(
 				'status' => 'error',
 				'message' => 'Erro ao salvar o arquivo',
-				'error' => $error
+				'error' => $error->getMessage(),
 			), JSON_UNESCAPED_UNICODE);
 			die();
 		}
