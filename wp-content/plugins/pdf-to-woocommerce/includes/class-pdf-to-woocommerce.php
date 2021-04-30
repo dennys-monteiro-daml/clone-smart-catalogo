@@ -78,6 +78,11 @@ class Pdf_To_Woocommerce
 
 		$this->load_dependencies();
 		$this->set_locale();
+
+		remove_action('woocommerce_widget_shopping_cart_total', 'woocommerce_widget_shopping_cart_subtotal');
+		remove_action('woocommerce_widget_shopping_cart_buttons', 'woocommerce_widget_shopping_cart_button_view_cart');
+		remove_action('woocommerce_widget_shopping_cart_buttons', 'woocommerce_widget_shopping_cart_proceed_to_checkout', 20);
+		
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 	}
@@ -182,13 +187,12 @@ class Pdf_To_Woocommerce
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 		$this->loader->add_filter('use_block_editor_for_post_type', $plugin_admin, 'remove_gutemberg', 10, 2);
-		$this->loader->add_action('wp_ajax_add_pdf', $plugin_admin, 'handle_pdf_upload');		
+		$this->loader->add_action('wp_ajax_add_pdf', $plugin_admin, 'handle_pdf_upload');
 		$this->loader->add_action('wp_ajax_convert_pdf', $plugin_admin, 'convert_pdf_page');
 		$this->loader->add_action('wp_ajax_create_product', $plugin_admin, 'create_product');
 		$this->loader->add_action('script_loader_tag', $plugin_admin, 'script_loader_tag', 10, 3);
 
 		$this->loader->add_action('save_post_' . $sc->post_type, $sc, 'on_post_saved', 10, 2);
-		
 	}
 
 	/**
