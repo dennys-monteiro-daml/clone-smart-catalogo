@@ -9,7 +9,7 @@
 get_header(); ?>
 
 <div id="primary" class="content-area">
-	<main id="main" class="site-main catalog-page" role="main">
+	<main id="main" class="site-main" role="main">
 		<!-- <h1>EPA</h1> -->
 		<?php
 		while (have_posts()) :
@@ -19,78 +19,80 @@ get_header(); ?>
 
 			get_template_part('content', 'single');
 
-			$id = get_the_ID();
+		?><div class="catalog-page"><?php
 
-			// consulta os produtos do catálogo
-			$query = new WP_Query(array(
-				'post_type' => 'product',
-				'meta_query' => array(
-					array(
-						'key' => 'catalog_id',
-						'value' => $id,
-						'compare' => '='
-					)
-				),
-				'posts_per_page' => -1,
-			));
-			$products = array();
+					$id = get_the_ID();
 
-			if ($query->have_posts()) {
-				// echo '<p>Produtos no catálogo: </p>';
-				// echo '<ul>';
-				while ($query->have_posts()) {
-					$query->the_post();
-					$product_id = $query->post->ID;
+					// consulta os produtos do catálogo
+					$query = new WP_Query(array(
+						'post_type' => 'product',
+						'meta_query' => array(
+							array(
+								'key' => 'catalog_id',
+								'value' => $id,
+								'compare' => '='
+							)
+						),
+						'posts_per_page' => -1,
+					));
+					$products = array();
 
-					// montar array dos produtos
-					$products[] = array(
-						'title' => $query->post->post_title,
-						'url' => get_permalink($product_id),
-						'catalog_page' => get_post_meta($product_id, 'catalog_page', true),
-						'cropped' => json_decode(get_post_meta($product_id, 'cropped', true)),
-						'id' => $product_id,
-					);
-					// echo '<li>' . get_the_ID() . '- ' . get_the_title() . '</li>';
-				}
-				// echo '</ul>';
-			}
+					if ($query->have_posts()) {
+						// echo '<p>Produtos no catálogo: </p>';
+						// echo '<ul>';
+						while ($query->have_posts()) {
+							$query->the_post();
+							$product_id = $query->post->ID;
 
-			wp_reset_postdata();
+							// montar array dos produtos
+							$products[] = array(
+								'title' => $query->post->post_title,
+								'url' => get_permalink($product_id),
+								'catalog_page' => get_post_meta($product_id, 'catalog_page', true),
+								'cropped' => json_decode(get_post_meta($product_id, 'cropped', true)),
+								'id' => $product_id,
+							);
+							// echo '<li>' . get_the_ID() . '- ' . get_the_title() . '</li>';
+						}
+						// echo '</ul>';
+					}
 
-			$number_of_pages = get_post_meta($id, 'number_of_pages', true);
+					wp_reset_postdata();
 
-			if (!empty($number_of_pages) && intval($number_of_pages) > 0) {
-				$number_of_pages = intval($number_of_pages);
-				// loop nas paginas do catalogo
-				for ($i = 0; $i < $number_of_pages; $i++) {
+					$number_of_pages = get_post_meta($id, 'number_of_pages', true);
 
-					// verificar produtos nesta pagina do catalogo
-					$products_on_page = array_filter($products, function ($product) use ($i) {
-						return $product['catalog_page'] == $i;
-					});
+					if (!empty($number_of_pages) && intval($number_of_pages) > 0) {
+						$number_of_pages = intval($number_of_pages);
+						// loop nas paginas do catalogo
+						for ($i = 0; $i < $number_of_pages; $i++) {
 
-					// exibe os links dos produtos
-					foreach ($products_on_page as $product) { ?>
-						<div style="position:absolute;" id="product-<?php echo $product['id'] ?>">
-							<a href="<?php echo $product['url'] ?>" target="_blank">
-								<?php echo $product['title'] ?>
-								<i class="fas fa-external-link-alt"></i>
-							</a>
-						</div>
+							// verificar produtos nesta pagina do catalogo
+							$products_on_page = array_filter($products, function ($product) use ($i) {
+								return $product['catalog_page'] == $i;
+							});
 
-					<?php } ?>
+							// exibe os links dos produtos
+							foreach ($products_on_page as $product) { ?>
+							<div style="position:absolute;" id="product-<?php echo $product['id'] ?>">
+								<a href="<?php echo $product['url'] ?>" target="_blank">
+									<?php echo $product['title'] ?>
+									<i class="fas fa-external-link-alt"></i>
+								</a>
+							</div>
 
-					<img id="catalog-page-<?php echo $i ?>" src="<?php echo Pdf_To_Woocommerce_Admin::get_upload_url($id)
-																		. Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER
-																		. DIRECTORY_SEPARATOR
-																		. "$i.png" ?>" class="img-fluid" />
+						<?php } ?>
 
-		<?php }
-			}
-			do_action('storefront_single_post_after', $products);
-		endwhile; // End of the loop. 
-		?>
+						<img id="catalog-page-<?php echo $i ?>" src="<?php echo Pdf_To_Woocommerce_Admin::get_upload_url($id)
+																			. Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER
+																			. DIRECTORY_SEPARATOR
+																			. "$i.png" ?>" class="img-fluid" />
 
+			<?php }
+					}
+					do_action('storefront_single_post_after', $products);
+				endwhile; // End of the loop. 
+			?>
+			</div>
 	</main><!-- #main -->
 </div><!-- #primary -->
 

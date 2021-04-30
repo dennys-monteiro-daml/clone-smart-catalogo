@@ -32,5 +32,24 @@ function woo_btn_checkout()
 	echo '<a href="' . esc_url(wc_get_checkout_url()) . '" class="button checkout wc-forward">' . esc_html__('Orçamento', 'woocommerce') . '</a>';
 }
 
+function add_product_count_to_post()
+{
+	$id = get_the_ID();
+	$products = new WP_Query(array(
+		'post_type' => 'product',
+		'posts_per_page' => -1,
+        'meta_query' => array(
+            array(
+                'key' => 'catalog_id',
+                'value' => $id,
+                'compare' => '='
+            )
+        ),
+	));
+	
+	echo "<span class='product-count'>" . $products->post_count . " produtos</span>";
+}
+
+add_action('storefront_loop_post', 'add_product_count_to_post', 40);
 add_action('woocommerce_widget_shopping_cart_buttons', 'woo_btn_view_cart');
 add_action('woocommerce_widget_shopping_cart_buttons', 'woo_btn_checkout', 20);

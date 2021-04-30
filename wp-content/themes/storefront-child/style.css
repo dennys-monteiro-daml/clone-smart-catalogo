@@ -39,3 +39,7 @@ Images License: GNU General Public License v2 or later
 .catalog-page a:hover {
     filter: brightness(1.08);
 }
+
+.product-count {
+    color: #5f5f5f;
+}
