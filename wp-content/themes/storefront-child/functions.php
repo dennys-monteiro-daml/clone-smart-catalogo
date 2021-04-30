@@ -35,18 +35,22 @@ function woo_btn_checkout()
 function add_product_count_to_post()
 {
 	$id = get_the_ID();
+	if (get_post_type($id) != Smart_Catalog::get_instance()->post_type) {
+		return;
+	}
+
 	$products = new WP_Query(array(
 		'post_type' => 'product',
 		'posts_per_page' => -1,
-        'meta_query' => array(
-            array(
-                'key' => 'catalog_id',
-                'value' => $id,
-                'compare' => '='
-            )
-        ),
+		'meta_query' => array(
+			array(
+				'key' => 'catalog_id',
+				'value' => $id,
+				'compare' => '='
+			)
+		),
 	));
-	
+
 	echo "<span class='product-count'>" . $products->post_count . " produtos</span>";
 }
 
