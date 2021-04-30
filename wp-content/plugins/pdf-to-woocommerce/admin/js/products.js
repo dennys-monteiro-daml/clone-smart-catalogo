@@ -3,9 +3,10 @@
 
     $(document).ready(function () {
 
-        const { products, admin_url } = wp_products;
+        const { products, admin_url, product_cat } = wp_products;
         let currentPage = 0;
         let numberOfItems = 0;
+        let numberOfCategories = 1;
 
         console.log('products -> ', products);
 
@@ -35,7 +36,11 @@
 
             formData.append('product-name', $('#product-name').val());
             formData.append('product-code', $('#product-code').val());
-            formData.append('category[0]', $('#category-0').val());
+
+            for (var i = 0; i < numberOfCategories; i++) {
+                formData.append(`category[${i}]`, $(`#category-${i}`).val());
+            }
+
             formData.append('variation', $('#variation').val());
             formData.append('_height', $('#_height').val());
             formData.append('_length', $('#_length').val());
@@ -85,6 +90,8 @@
                     $('#page-selector').removeAttr('disabled');
                     $('#catalog-page').cropper('destroy');
 
+                    clearCategories();
+
                     $('#product-name').val('');
                     $('#product-code').val('');
                     $('#category-0').val('');
@@ -94,7 +101,7 @@
                     $('#_width').val('');
                     $('#finishing').val('');
                     $('#notes').val('');
-                    
+
                     showCurrentPageProducts();
 
                     return;
@@ -110,11 +117,33 @@
             showCurrentPageProducts();
         });
 
+        $('#add-category').click(function () {
+            const html = `<p class="category-wrapper-${numberOfCategories}"><select name="category-${numberOfCategories}" id="category-${numberOfCategories}">
+                    ${product_cat}
+                </select></p>`;
+            console.log(html);
+            $(html).insertAfter(`.category-wrapper-${numberOfCategories - 1}`);
+            numberOfCategories++;
+        });
+
+        $('#remove-category').click(removeCategory);
 
         function clearOverlays() {
             for (var i = 0; i < numberOfItems; i++) {
                 $(`#overlay-${i}`).remove();
             }
+        }
+
+        function clearCategories() {
+            while (numberOfCategories > 1) {
+                removeCategory();
+            }
+        }
+
+        function removeCategory() {
+            if (numberOfCategories == 1) return;
+            $(`.category-wrapper-${numberOfCategories - 1}`).remove();
+            numberOfCategories--;
         }
 
         function showCurrentPageProducts() {

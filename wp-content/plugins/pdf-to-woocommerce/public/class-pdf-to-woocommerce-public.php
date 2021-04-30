@@ -88,23 +88,8 @@ class Pdf_To_Woocommerce_Public
 
 		$fabricantes = Fabricante::get_instance();
 		$fabricantes->register_post_type();
-		// register_post_type(
-		// 	'smart_catalog',
-		// 	// CPT Options
-		// 	array(
-		// 		'labels' => xcompile_post_type_labels('Catálogo', 'Catálogos'),
-		// 		'public' => true,
-		// 		'has_archive' => true,
-		// 		'rewrite' => array('slug' => 'catalogo'),
-		// 		'show_in_rest' => true,
-		// 		'supports' => array(
-		// 			'title'
-		// 		),
-		// 		'register_meta_box_cb' => array($this, 'add_post_type_metabox'),
-		// 		'menu_icon' => 'dashicons-analytics'
-
-		// 	)
-		// );
+		$fabricantes->register_taxonomies();
+		
 	}
 
 	public function add_post_type_metabox()
@@ -147,12 +132,12 @@ class Pdf_To_Woocommerce_Public
 		}
 	}
 
-	function kinsta_books_on_blog_page($query)
-	{
-		if ($query->is_home() && $query->is_main_query()) {
-			$query->set('post_type', array('post', 'smart_catalog'));
-		}
-	}
+	// function kinsta_books_on_blog_page($query)
+	// {
+	// 	if ($query->is_home() && $query->is_main_query()) {
+	// 		$query->set('post_type', array('post', 'smart_catalog'));
+	// 	}
+	// }
 
 	function add_script_to_catalog($products = array())
 	{

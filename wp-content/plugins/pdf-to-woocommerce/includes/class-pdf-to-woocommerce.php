@@ -177,15 +177,17 @@ class Pdf_To_Woocommerce
 
 		$plugin_admin = new Pdf_To_Woocommerce_Admin($this->get_plugin_name(), $this->get_version());
 
+		$sc = Smart_Catalog::get_instance();
+
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
-		$this->loader->add_action('admin_menu', $plugin_admin, 'admin_menu');
 		$this->loader->add_filter('use_block_editor_for_post_type', $plugin_admin, 'remove_gutemberg', 10, 2);
-		$this->loader->add_action('wp_ajax_add_pdf', $plugin_admin, 'handle_pdf_upload');
-		$this->loader->add_action('save_post_' . Smart_Catalog::get_instance()->post_type, $plugin_admin, 'save_catalogo', 10, 2);
+		$this->loader->add_action('wp_ajax_add_pdf', $plugin_admin, 'handle_pdf_upload');		
 		$this->loader->add_action('wp_ajax_convert_pdf', $plugin_admin, 'convert_pdf_page');
 		$this->loader->add_action('wp_ajax_create_product', $plugin_admin, 'create_product');
 		$this->loader->add_action('script_loader_tag', $plugin_admin, 'script_loader_tag', 10, 3);
+
+		$this->loader->add_action('save_post_' . $sc->post_type, $sc, 'on_post_saved', 10, 2);
 		
 	}
 
@@ -216,10 +218,10 @@ class Pdf_To_Woocommerce
 
 		$this->loader->add_filter('woocommerce_order_button_text', $plugin_public, 'woo_order_button_text');
 
-		$this->loader->add_filter('woocommerce_thankyou_order_received_text', $plugin_public, 'woo_thankyou_text' );
+		$this->loader->add_filter('woocommerce_thankyou_order_received_text', $plugin_public, 'woo_thankyou_text');
 
 		$this->loader->add_action('admin_footer-post.php', $plugin_public, 'jc_append_post_status_list');
-		$this->loader->add_action('pre_get_posts', $plugin_public, 'kinsta_books_on_blog_page');
+		// $this->loader->add_action('pre_get_posts', $plugin_public, 'kinsta_books_on_blog_page');
 		//$this->loader->add_action('storefront_loop_post', $plugin_public, 'storefront_loop_post');
 		$this->loader->add_action('storefront_single_post_after', $plugin_public, 'add_script_to_catalog');
 	}

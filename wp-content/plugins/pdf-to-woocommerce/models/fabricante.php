@@ -54,9 +54,7 @@ class Fabricante extends Custom_Post_Type_Base
                 $selected = '';
                 if ($value == $selected_id) $selected = 'selected';
                 $options .= "<option value='$value' $selected>$label</option>";
-                
             }
-            
         }
         wp_reset_postdata();
         // /** @var Post_Data[] */
@@ -76,5 +74,36 @@ class Fabricante extends Custom_Post_Type_Base
         // echo "</pre>";
 
         return "<select id='$id' name='$id' class='$class'>$options</select>";
+    }
+
+    public function register_taxonomies()
+    {
+        // Add new taxonomy, NOT hierarchical (like tags)
+        $labels = array(
+            'name' => _x('Tags', 'taxonomy general name'),
+            'singular_name' => _x('Tag', 'taxonomy singular name'),
+            'search_items' =>  __('Buscar Tags'),
+            'popular_items' => __('Tags Populares'),
+            'all_items' => __('Todas as Tags'),
+            'parent_item' => null,
+            'parent_item_colon' => null,
+            'edit_item' => __('Editar Tag'),
+            'update_item' => __('Atualizar Tag'),
+            'add_new_item' => __('Adicionar nova Tag'),
+            'new_item_name' => __('Nova tag'),
+            'separate_items_with_commas' => __('Separe tags por vírgulas'),
+            'add_or_remove_items' => __('Adicionar ou remover tags'),
+            'choose_from_most_used' => __('Escolher entre as tags mais utilizadas'),
+            'menu_name' => __('Tags'),
+        );
+
+        register_taxonomy('tag', $this->post_type, array(
+            'hierarchical' => false,
+            'labels' => $labels,
+            'show_ui' => true,
+            'update_count_callback' => '_update_post_term_count',
+            'query_var' => true,
+            'rewrite' => array('slug' => 'tag'),
+        ));
     }
 }

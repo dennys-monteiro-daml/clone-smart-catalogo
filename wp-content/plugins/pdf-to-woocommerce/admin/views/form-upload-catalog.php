@@ -28,8 +28,10 @@ if ($pages !== '' && intval($pages) > 0) {
             $product_query->the_post();
             $product_id = $product_query->post->ID;
 
+            // código temporário
             update_post_meta($product_id, '_price', 0);
             update_post_meta($product_id, '_regular_price', 0);
+
             // montar array dos produtos
             $arr[] = array(
                 'data' => $product_query->post,
@@ -41,7 +43,7 @@ if ($pages !== '' && intval($pages) > 0) {
         }
     }
     wp_reset_postdata();
-    
+
 
     if (!isset($arr)) {
         $arr = array();
@@ -51,6 +53,7 @@ if ($pages !== '' && intval($pages) > 0) {
     wp_localize_script("pdf-products", "wp_products", array(
         'products' => $arr,
         'admin_url' => get_admin_url(),
+        "product_cat" => get_woocommerce_categories_options()
     ));
 
 
@@ -89,11 +92,13 @@ if ($pages !== '' && intval($pages) > 0) {
                 <th> <label for="category-0">Categoria</label></th>
                 <td>
                     <input name="cropper-js" id="cropper-js" value="" type="hidden" />
-                    <select name="category-0" id="category-0">
-                        <?php
-                        echo get_woocommerce_categories_options();
-                        ?>
-                    </select>
+                    <p class="category-wrapper-0">
+                        <select name="category-0" id="category-0">
+                            <?php
+                            echo get_woocommerce_categories_options();
+                            ?>
+                        </select>
+                    </p>
                     <div class='button button-primary sm-button' id='add-category'>+</div>
                     <div class='button cancel sm-button' id='rm-category' style="display: none">-</div>
                 </td>
@@ -119,9 +124,9 @@ if ($pages !== '' && intval($pages) > 0) {
             <tr>
                 <th> <label>Dimensões (cm)</label></th>
                 <td>
-                    <input name="_length" id="_length" placeholder="Comprimento" class="input-sm" value="" />
-                    <input name="_width" id="_width" placeholder="Largura" class="input-sm" value="" />
-                    <input name="_height" id="_height" placeholder="Altura" class="input-sm" value="" />
+                    <input name="_length" id="_length" placeholder="Comprimento" class="input-sm" type="number" min="0" value="" />
+                    <input name="_width" id="_width" placeholder="Largura" class="input-sm" type="number" min="0" value="" />
+                    <input name="_height" id="_height" placeholder="Altura" class="input-sm" type="number" min="0" value="" />
                 </td>
             </tr>
             <tr>
@@ -152,18 +157,15 @@ if ($pages !== '' && intval($pages) > 0) {
         </table>
     </div>
 
-<?php
+<?php } else { ?>
 
-
-} else {
-?>
     <table class="form-table">
 
         <tr>
             <th> <label for="file">PDF</label></th>
             <td>
                 <input type="hidden" id="post_ID" value="<?php echo get_the_ID() ?>" />
-                <input name="file" id="file" type="file" value="" />
+                <input name="file" id="file" type="file" value="" accept=".pdf" />
             </td>
         </tr>
         <tr>

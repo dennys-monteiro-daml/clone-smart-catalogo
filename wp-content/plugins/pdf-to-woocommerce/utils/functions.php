@@ -61,7 +61,7 @@ function get_woocommerce_categories_options()
 
     $product_categories = get_terms('product_cat', $cat_args);
 
-    $options = '<option> -- Selecione -- </option>';
+    $options = '<option value=""> -- Selecione -- </option>';
 
     if (!empty($product_categories)) {
         // print_r($product_categories);

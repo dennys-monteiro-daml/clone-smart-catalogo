@@ -100,27 +100,10 @@ class Pdf_To_Woocommerce_Admin
 			"convert_pdf_nonce" => wp_create_nonce('convert_pdf_nonce'),
 			"plugin_admin_url" => plugin_dir_url(__FILE__),
 			"converted_folder" => Pdf_To_Woocommerce_Admin::PDF_CONVERTED_FOLDER,
-			"product_cat" => get_woocommerce_categories_options()
 		));
 	}
 
-	public function admin_menu()
-	{
-
-		// $menus = Pdf_To_Woocommerce_Admin::ADMIN_MENU_ITEMS;
-
-		// foreach ($menus as $menu) {
-		// 	add_menu_page(
-		// 		$menu['page_title'],
-		// 		$menu['menu_title'],
-		// 		$menu['capability'],
-		// 		$menu['slug'],
-		// 		array($this, $menu['callback']),
-		// 		$menu['icon'],
-		// 		$menu['position']
-		// 	);
-		// }
-	}
+	
 
 	public function page_main()
 	{
@@ -341,12 +324,16 @@ class Pdf_To_Woocommerce_Admin
 			$product->set_category_ids($_POST['category']);
 			$product->set_description($_POST['notes']);
 			$product->set_image_id($upload_id);
+			$product->set_price('0.00');
+			$product->set_sale_price('0.00');
 			$product->save();
 
 			$id = $product->get_id();
 			// update_post_meta($id, 'cropper-js', serialize(array(
 			// 	$_POST['cropW'], $_POST['cropH'], $_POST['cropX'], $_POST['cropY']
 			// )));
+			update_post_meta($id, '_price', 0);
+            update_post_meta($id, '_regular_price', 0);
 			update_post_meta($id, 'cropped', json_encode(array(
 				'width' => $_POST['cropW'],
 				'height' => $_POST['cropH'],
@@ -375,42 +362,6 @@ class Pdf_To_Woocommerce_Admin
 				'error' => $error->getMessage()
 			), JSON_UNESCAPED_UNICODE);
 			die();
-		}
-	}
-
-
-	public function save_catalogo(int $post_id, WP_Post $post)
-	{
-		// $post = get_post($post_id);
-		$is_revision = wp_is_post_revision($post_id);
-
-		if ($is_revision)
-			return;
-
-		$number_of_pages = get_post_meta($post_id, Smart_Catalog::META_KEY_NUMBER_OF_PAGES, true);
-
-		$fields = array('fabricante');
-
-		foreach ($fields as $field_name) {
-			if (isset($_POST[$field_name])) {
-				$field_value = trim($_POST[$field_name]);
-				if (!empty($field_value)) {
-					update_post_meta($post_id, $field_name, $field_value);
-				} else {
-					delete_post_meta($post_id, $field_name);
-				}
-			}
-		}
-
-		// Do not change status if post is published OR uploaded
-		if ($post->post_status === 'publish' || $post->post_status === 'uploaded' || $post->post_status === 'trash')
-			return;
-
-		if ($number_of_pages != '' && intval($number_of_pages) > 0) {
-			wp_update_post(array(
-				'ID' => $post_id,
-				'post_status' => 'uploaded'
-			));
 		}
 	}
 
