@@ -52,7 +52,7 @@ get_header(); ?>
 								'cropped' => json_decode(get_post_meta($product_id, 'cropped', true)),
 								'id' => $product_id,
 							);
-							// echo '<li>' . get_the_ID() . '- ' . get_the_title() . '</li>';
+							 echo '<li>' . get_the_ID() . '- ' . get_the_title() . '</li>';
 						}
 						// echo '</ul>';
 					}
